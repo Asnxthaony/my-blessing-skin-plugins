@@ -1,0 +1,13 @@
+{
+  "name": "player-list",
+  "version": "0.0.1",
+  "title": "玩家列表",
+  "description": "在用户中心的仪表盘处显示玩家列表",
+  "author": "Asnxthaony",
+  "url": "https://github.com/Asnxthaony",
+  "license": "MIT",
+  "namespace": "Asnxthaony\\PlayerList",
+  "require": {
+    "blessing-skin-server": "^5.0.0"
+  }
+}
