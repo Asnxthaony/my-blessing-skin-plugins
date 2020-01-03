@@ -14,7 +14,7 @@
     public function avatarByPlayer($size, $name)
     {
         if ($player = Player::where('name', $name)->first()) {
-            $hash = $player->getTexture('skin');
+            $hash = $hash = optional($player->skin)->hash;
             if (Storage::disk('textures')->has($hash)) {
                 $png = Minecraft::generateAvatarFromSkin(
                     Storage::disk('textures')->read($hash),
