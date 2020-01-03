@@ -24,7 +24,9 @@
                 return $this->outputImage(png($png));
             }
         }
-   
-        return response()->file(storage_path('static_textures/avatar.png'));
+
+        $default = Image::make(storage_path('static_textures/avatar.png'));
+
+        return $default->resize($size, $size)->response();
     }
 ```
