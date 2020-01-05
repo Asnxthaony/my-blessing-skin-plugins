@@ -15,5 +15,5 @@ return function (Dispatcher $events) {
     ]]);
 
     resolve('oauth.providers')
-        ->put('littleskin', ['icon' => 'laravel', 'displayName' => 'LittleSkin']);
+        ->put('littleskin', ['icon' => 'littleskin', 'displayName' => 'LittleSkin']);
 };
