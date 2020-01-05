@@ -147,6 +147,10 @@ class ComposerStaticInit8079fa2f1417557a99b1e584a408d9a1
         array (
             0 => __DIR__ . '/..' . '/socialiteproviders/manager/src',
         ),
+        'SocialiteProviders\\LittleSkin\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/socialiteproviders/LittleSkin',
+        ),
         'Psr\\SimpleCache\\' => 
         array (
             0 => __DIR__ . '/..' . '/psr/simple-cache/src',
