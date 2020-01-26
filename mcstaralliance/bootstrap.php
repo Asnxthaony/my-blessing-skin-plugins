@@ -69,7 +69,7 @@ return function (Dispatcher $events, Filter $filter) {
     });
 
     // 玩家列表
-    Hook::addScriptFileToPage(plugin_assets('mcstaralliance', 'js/player-list.js'), ['user', 'user/*']);
+    Hook::addScriptFileToPage(plugin_assets('mcstaralliance', 'js/player-list.js'), ['user']);
 
     // Live2D
     Hook::addScriptFileToPage(plugin_assets('mcstaralliance', 'js/waifu-tips.js'), ['user', 'user/*']);
@@ -93,7 +93,7 @@ return function (Dispatcher $events, Filter $filter) {
 
     Hook::addMenuItem('explore', 1002, [
         'title' => '捐助支持',
-        'link'  => 'https://pay.mcstaralliance.com ',
+        'link'  => 'https://pay.mcstaralliance.com',
         'icon'  => 'fa-donate',
         'new-tab' => true,
     ]);
