@@ -7,26 +7,3 @@
 本插件没有配置页面，所有配置需要通过修改源代码来进行。
 
 1. 修改 `assets/js/player-list.js` 中的接口地址
-
-2. 修改 `app/Http/Controllers/TextureController.php` 中的 `avatarByPlayer` 方法
-
-```php
-    public function avatarByPlayer($size, $name)
-    {
-        if ($player = Player::where('name', $name)->first()) {
-            $hash = $hash = optional($player->skin)->hash;
-            if (Storage::disk('textures')->has($hash)) {
-                $png = Minecraft::generateAvatarFromSkin(
-                    Storage::disk('textures')->read($hash),
-                    $size
-                );
-
-                return $this->outputImage(png($png));
-            }
-        }
-
-        $default = Image::make(storage_path('static_textures/avatar.png'));
-
-        return $default->resize($size, $size)->response();
-    }
-```
