@@ -1,0 +1,19 @@
+{
+  "name": "mcstaralliance",
+  "version": "0.1.0",
+  "title": "星域联盟",
+  "description": "星域联盟 @ mcstaralliance",
+  "author": "Asnxthaony",
+  "url": "https://github.com/Asnxthaony",
+  "license": "MIT",
+  "namespace": "mcstaralliance",
+  "require": {
+    "blessing-skin-server": "^5.0.0"
+  },
+  "enchants": {
+    "icon": {
+      "fa": "star",
+      "bg": "success"
+    }
+  }
+}
