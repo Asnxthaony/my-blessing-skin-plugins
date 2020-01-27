@@ -35,14 +35,14 @@ return function (Dispatcher $events, Filter $filter) {
         $filter->add('user_can_edit_profile', function ($can, $action, $addition) {
             switch ($action) {
                 case 'delete':
-                    return new Rejection('请使用·Telegram 联系 @Asnxthaony 申请注销您的账号。');
+                    return new Rejection('请使用 Telegram 联系 @Asnxthaony 申请注销您的账号。');
                 default:
                     break;
             }
         });
 
         $filter->add('user_can_rename_player', function ($can, $player, $newName) {
-            return new Rejection('请使用·Telegram 联系 @Asnxthaony 申请更改您的角色名。');
+            return new Rejection('请使用 Telegram 联系 @Asnxthaony 申请更改您的角色名。');
         });
 
         $filter->add('grid:user.index', function ($grid) {
