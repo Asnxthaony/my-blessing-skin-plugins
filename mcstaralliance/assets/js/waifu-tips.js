@@ -199,13 +199,15 @@ function loadExternalResource(url, type) {
      });
 }
 
-Promise.all([
-    loadExternalResource('https://skin.mcstaralliance.com/plugins/mcstaralliance/assets/css/waifu.css?v=0.0.7', 'css'),
-    loadExternalResource('https://skin.mcstaralliance.com/plugins/mcstaralliance/assets/js/live2d.min.js?v=0.0.7', 'js'),
-]).then(() => {
-    if (localStorage.getItem('waifu-display') && Date.now() - localStorage.getItem('waifu-display') <= 86400000) {
-        // 已关闭
-    } else {
-        loadWidget();
-    }
-});
+if (screen.width >= 768) {
+    Promise.all([
+        loadExternalResource('https://skin.mcstaralliance.com/plugins/mcstaralliance/assets/css/waifu.css?v=0.1.3', 'css'),
+        loadExternalResource('https://skin.mcstaralliance.com/plugins/mcstaralliance/assets/js/live2d.min.js?v=0.1.3', 'js'),
+    ]).then(() => {
+        if (localStorage.getItem('waifu-display') && Date.now() - localStorage.getItem('waifu-display') <= 86400000) {
+            // 已关闭
+        } else {
+            loadWidget();
+        }
+    });
+}

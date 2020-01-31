@@ -45,11 +45,6 @@ return function (Dispatcher $events, Filter $filter) {
             return new Rejection('请使用 Telegram 联系 @Asnxthaony 申请更改您的角色名。');
         });
 
-        $filter->add('grid:user.index', function ($grid) {
-            array_push($grid['widgets'][0][0], 'mcstaralliance::playerList');
-            return $grid;
-        });
-
         $filter->add('grid:user.profile', function ($grid) {
             array_unshift($grid['widgets'][0][0], 'mcstaralliance::uid');
             return $grid;
@@ -67,9 +62,6 @@ return function (Dispatcher $events, Filter $filter) {
             }
         }
     });
-
-    // 玩家列表
-    Hook::addScriptFileToPage(plugin_assets('mcstaralliance', 'js/player-list.js'), ['user']);
 
     // Live2D
     Hook::addScriptFileToPage(plugin_assets('mcstaralliance', 'js/waifu-tips.js'), ['user', 'user/*']);
