@@ -18,7 +18,7 @@ function loadWidget() {
         document.getElementById('waifu').style.bottom = '-10px';
     }, 0);
 
-    function registerEventListener() {
+    (function registerEventListener() {
         document.querySelector('#waifu-tool .fa-comment').addEventListener('click', showHitokoto);
 
         document.querySelector('#waifu-tool .fa-paper-plane').addEventListener('click', () => {
@@ -53,10 +53,9 @@ function loadWidget() {
                 document.getElementById('waifu').style.display = 'none';
             }, 3000);
         });
-    }
-    registerEventListener();
+    })();
 
-    function welcomeMessage() {
+    (function welcomeMessage() {
         var now = new Date().getHours();
 
         if (now > 5 && now <= 7)
@@ -77,12 +76,15 @@ function loadWidget() {
             text = '你是夜猫子呀？这么晚还不睡觉，明天起的来嘛？';
 
         showMessage(text, 7000, 8);
+    })();
+
+    function randomSelection(obj) {
+        return Array.isArray(obj) ? obj[Math.floor(Math.random() * obj.length)] : obj;
     }
-    welcomeMessage();
 
     var userAction = false,
-        userActionTimer = null,
-        messageTimer = null,
+        userActionTimer,
+        messageTimer,
         messageArray = ['好久不见，日子过得好快呢……', '大坏蛋！你都多久没理人家了呀，嘤嘤嘤～', '嗨～快来逗我玩吧！', '拿小拳拳锤你胸口！', '记得把小家加入 Adblock 白名单哦！'];
     window.addEventListener('mousemove', () => userAction = true);
     window.addEventListener('keydown', () => userAction = true);
@@ -93,7 +95,7 @@ function loadWidget() {
             userActionTimer = null;
         } else if (!userActionTimer) {
             userActionTimer = setInterval(() => {
-                showMessage(messageArray[Math.floor(Math.random() * messageArray.length)], 6000, 9);
+                showMessage(randomSelection(messageArray), 6000, 9);
             }, 20000);
         }
     }, 1000);
@@ -125,7 +127,7 @@ function loadWidget() {
                 clearTimeout(messageTimer);
                 messageTimer = null;
             }
-            if (Array.isArray(text)) text = text[Math.floor(Math.random() * text.length)];
+            text = randomSelection(text);
             sessionStorage.setItem('waifu-text', priority);
             var tips = document.getElementById('waifu-tips');
             tips.innerHTML = text;
@@ -137,27 +139,30 @@ function loadWidget() {
         }
     }
 
-    function initModel() {
+    (function initModel() {
         loadModel();
+
         fetch('https://api.mcstaralliance.com/live2d/message.json')
             .then(response => response.json())
             .then(result => {
                 result.mouseover.forEach(tips => {
                     window.addEventListener('mouseover', event => {
                         if (!event.target.matches(tips.selector)) return;
-                        var text = Array.isArray(tips.text) ? tips.text[Math.floor(Math.random() * tips.text.length)] : tips.text;
+                        var text = randomSelection(tips.text);
                         text = text.replace('{text}', event.target.innerText);
                         showMessage(text, 4000, 8);
                     });
                 });
+
                 result.click.forEach(tips => {
                     window.addEventListener('click', event => {
                         if (!event.target.matches(tips.selector)) return;
-                        var text = Array.isArray(tips.text) ? tips.text[Math.floor(Math.random() * tips.text.length)] : tips.text;
+                        var text = randomSelection(tips.text);
                         text = text.replace('{text}', event.target.innerText);
                         showMessage(text, 4000, 8);
                     });
                 });
+
                 result.seasons.forEach(tips => {
                     var now = new Date(),
                         after = tips.date.split('-')[0],
@@ -170,10 +175,9 @@ function loadWidget() {
                     }
                 });
             });
-    }
-    initModel();
+    })();
 
-    function loadModel() {
+    async function loadModel() {
         loadlive2d('live2d', 'https://api.mcstaralliance.com/live2d/Pio/rand.php', console.log('live2d', '模型加载完成'));
     }
 }
@@ -201,8 +205,8 @@ function loadExternalResource(url, type) {
 
 if (screen.width >= 768) {
     Promise.all([
-        loadExternalResource('https://skin.mcstaralliance.com/plugins/mcstaralliance/assets/css/waifu.css?v=0.1.3', 'css'),
-        loadExternalResource('https://skin.mcstaralliance.com/plugins/mcstaralliance/assets/js/live2d.min.js?v=0.1.3', 'js'),
+        loadExternalResource('https://skin.mcstaralliance.com/plugins/mcstaralliance/assets/css/waifu.css?v=0.1.4', 'css'),
+        loadExternalResource('https://skin.mcstaralliance.com/plugins/mcstaralliance/assets/js/live2d.min.js?v=0.1.4', 'js'),
     ]).then(() => {
         if (localStorage.getItem('waifu-display') && Date.now() - localStorage.getItem('waifu-display') <= 86400000) {
             // 已关闭

