@@ -67,12 +67,11 @@ return function (Dispatcher $events, Filter $filter) {
     Hook::addScriptFileToPage(plugin_assets('mcstaralliance', 'js/waifu-tips.js'), ['user', 'user/*']);
 
     $events->listen(RenderingFooter::class, function ($event) {
-        // CNZZ 站长统计
-        $event->addContent('<script src="https://v1.cnzz.com/z_stat.php?id=1278549902&web_id=1278549902"></script>');
-
         // Goggle Analytics
         $event->addContent('<script async src="https://www.googletagmanager.com/gtag/js?id=UA-154807642-1"></script>');
     });
+
+    Hook::addScriptFileToPage(plugin_assets('mcstaralliance', 'js/ga.js'), ['*']);
 
     Hook::addMenuItem('explore', 1001, [
         'title' => '用户使用手册',

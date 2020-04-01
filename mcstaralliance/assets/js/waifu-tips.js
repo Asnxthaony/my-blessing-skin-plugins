@@ -26,7 +26,7 @@ function loadWidget() {
                 if (!window.ASTEROIDSPLAYERS) window.ASTEROIDSPLAYERS = [];
                 window.ASTEROIDSPLAYERS.push(new Asteroids());
             } else {
-                var script = document.createElement('script');
+                let script = document.createElement('script');
                 script.src = 'https://cdn.jsdelivr.net/gh/GalaxyMimi/CDN/asteroids.js';
                 document.head.appendChild(script);
             }
@@ -82,7 +82,7 @@ function loadWidget() {
         return Array.isArray(obj) ? obj[Math.floor(Math.random() * obj.length)] : obj;
     }
 
-    var userAction = false,
+    let userAction = false,
         userActionTimer,
         messageTimer,
         messageArray = ['好久不见，日子过得好快呢……', '大坏蛋！你都多久没理人家了呀，嘤嘤嘤～', '嗨～快来逗我玩吧！', '拿小拳拳锤你胸口！', '记得把小家加入 Adblock 白名单哦！'];
@@ -112,7 +112,7 @@ function loadWidget() {
         fetch('https://v1.hitokoto.cn')
             .then(response => response.json())
             .then(result => {
-                var text = `这句一言来自 <span>「${result.from}」</span>，是 <span>${result.creator}</span> 在 hitokoto.cn 投稿的。`;
+                let text = `这句一言来自 <span>「${result.from}」</span>，是 <span>${result.creator}</span> 在 hitokoto.cn 投稿的。`;
                 showMessage(result.hitokoto, 6000, 9);
                 setTimeout(() => {
                     showMessage(text, 4000, 9);
@@ -129,7 +129,7 @@ function loadWidget() {
             }
             text = randomSelection(text);
             sessionStorage.setItem('waifu-text', priority);
-            var tips = document.getElementById('waifu-tips');
+            let tips = document.getElementById('waifu-tips');
             tips.innerHTML = text;
             tips.classList.add('waifu-tips-active');
             messageTimer = setTimeout(() => {
@@ -148,7 +148,7 @@ function loadWidget() {
                 result.mouseover.forEach(tips => {
                     window.addEventListener('mouseover', event => {
                         if (!event.target.matches(tips.selector)) return;
-                        var text = randomSelection(tips.text);
+                        let text = randomSelection(tips.text);
                         text = text.replace('{text}', event.target.innerText);
                         showMessage(text, 4000, 8);
                     });
@@ -157,14 +157,14 @@ function loadWidget() {
                 result.click.forEach(tips => {
                     window.addEventListener('click', event => {
                         if (!event.target.matches(tips.selector)) return;
-                        var text = randomSelection(tips.text);
+                        let text = randomSelection(tips.text);
                         text = text.replace('{text}', event.target.innerText);
                         showMessage(text, 4000, 8);
                     });
                 });
 
                 result.seasons.forEach(tips => {
-                    var now = new Date(),
+                    let now = new Date(),
                         after = tips.date.split('-')[0],
                         before = tips.date.split('-')[1] || after;
                     if ((after.split('/')[0] <= now.getMonth() + 1 && now.getMonth() + 1 <= before.split('/')[0]) && (after.split('/')[1] <= now.getDate() && now.getDate() <= before.split('/')[1])) {
@@ -205,8 +205,8 @@ function loadExternalResource(url, type) {
 
 if (screen.width >= 768) {
     Promise.all([
-        loadExternalResource('https://skin.mcstaralliance.com/plugins/mcstaralliance/assets/css/waifu.css?v=0.1.4', 'css'),
-        loadExternalResource('https://skin.mcstaralliance.com/plugins/mcstaralliance/assets/js/live2d.min.js?v=0.1.4', 'js'),
+        loadExternalResource('https://skin.mcstaralliance.com/plugins/mcstaralliance/assets/css/waifu.css?v=0.1.5', 'css'),
+        loadExternalResource('https://skin.mcstaralliance.com/plugins/mcstaralliance/assets/js/live2d.min.js?v=0.1.5', 'js'),
     ]).then(() => {
         if (localStorage.getItem('waifu-display') && Date.now() - localStorage.getItem('waifu-display') <= 86400000) {
             // 已关闭
