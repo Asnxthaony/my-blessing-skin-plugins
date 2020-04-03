@@ -56,6 +56,9 @@ return function (Dispatcher $events, Filter $filter) {
         $excludes = ['user/player', 'user/closet', 'skinlib'];
         if (! (in_array($path, $excludes) || explode("/", $path, 2)[0] == 'skinlib')) {
             $now = Carbon::now();
+            if ($now->year == 2020 && $now->month == 4 && $now->day == 4) {
+                $event->addContent('<style>html { filter: gray; -webkit-filter: grayscale(100%); }</style>');
+            }
             // 国家公祭日
             if ($now->month == 12 && $now->day == 13) {
                 $event->addContent('<style>html { filter: gray; -webkit-filter: grayscale(100%); }</style>');

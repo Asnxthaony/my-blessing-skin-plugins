@@ -121,22 +121,20 @@ function loadWidget() {
     }
 
     function showMessage(text, timeout, priority) {
-        if (!text) return;
-        if (!sessionStorage.getItem('waifu-text') || sessionStorage.getItem('waifu-text') <= priority) {
-            if (messageTimer) {
-                clearTimeout(messageTimer);
-                messageTimer = null;
-            }
-            text = randomSelection(text);
-            sessionStorage.setItem('waifu-text', priority);
-            let tips = document.getElementById('waifu-tips');
-            tips.innerHTML = text;
-            tips.classList.add('waifu-tips-active');
-            messageTimer = setTimeout(() => {
-                sessionStorage.removeItem('waifu-text');
-                tips.classList.remove('waifu-tips-active');
-            }, timeout);
+        if (!text || (sessionStorage.getItem('waifu-text') && sessionStorage.getItem('waifu-text') > priority)) return;
+        if (messageTimer) {
+            clearTimeout(messageTimer);
+            messageTimer = null;
         }
+        text = randomSelection(text);
+        sessionStorage.setItem('waifu-text', priority);
+        let tips = document.getElementById('waifu-tips');
+        tips.innerHTML = text;
+        tips.classList.add('waifu-tips-active');
+        messageTimer = setTimeout(() => {
+            sessionStorage.removeItem('waifu-text');
+            tips.classList.remove('waifu-tips-active');
+        }, timeout);
     }
 
     (function initModel() {
@@ -205,8 +203,8 @@ function loadExternalResource(url, type) {
 
 if (screen.width >= 768) {
     Promise.all([
-        loadExternalResource('https://skin.mcstaralliance.com/plugins/mcstaralliance/assets/css/waifu.css?v=0.1.5', 'css'),
-        loadExternalResource('https://skin.mcstaralliance.com/plugins/mcstaralliance/assets/js/live2d.min.js?v=0.1.5', 'js'),
+        loadExternalResource('https://skin.mcstaralliance.com/plugins/mcstaralliance/assets/css/waifu.css?v=0.1.6', 'css'),
+        loadExternalResource('https://skin.mcstaralliance.com/plugins/mcstaralliance/assets/js/live2d.min.js?v=0.1.6', 'js'),
     ]).then(() => {
         if (localStorage.getItem('waifu-display') && Date.now() - localStorage.getItem('waifu-display') <= 86400000) {
             // 已关闭
