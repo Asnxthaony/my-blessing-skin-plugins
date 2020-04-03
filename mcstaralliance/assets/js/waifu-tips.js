@@ -18,6 +18,28 @@ function loadWidget() {
         document.getElementById('waifu').style.bottom = '-10px';
     }, 0);
 
+    function randomSelection(obj) {
+        return Array.isArray(obj) ? obj[Math.floor(Math.random() * obj.length)] : obj;
+    }
+
+    let userAction = false,
+        userActionTimer,
+        messageTimer,
+        messageArray = ['好久不见，日子过得好快呢……', '大坏蛋！你都多久没理人家了呀，嘤嘤嘤～', '嗨～快来逗我玩吧！', '拿小拳拳锤你胸口！', '记得把小家加入 Adblock 白名单哦！'];
+    window.addEventListener('mousemove', () => userAction = true);
+    window.addEventListener('keydown', () => userAction = true);
+    setInterval(() => {
+        if (userAction) {
+            userAction = false;
+            clearInterval(userActionTimer);
+            userActionTimer = null;
+        } else if (!userActionTimer) {
+            userActionTimer = setInterval(() => {
+                showMessage(randomSelection(messageArray), 6000, 9);
+            }, 20000);
+        }
+    }, 1000);
+
     (function registerEventListener() {
         document.querySelector('#waifu-tool .fa-comment').addEventListener('click', showHitokoto);
 
@@ -56,7 +78,8 @@ function loadWidget() {
     })();
 
     (function welcomeMessage() {
-        var now = new Date().getHours();
+        let text,
+            now = new Date().getHours();
 
         if (now > 5 && now <= 7)
             text = '早上好！一日之计在于晨，美好的一天就要开始了。';
@@ -77,28 +100,6 @@ function loadWidget() {
 
         showMessage(text, 7000, 8);
     })();
-
-    function randomSelection(obj) {
-        return Array.isArray(obj) ? obj[Math.floor(Math.random() * obj.length)] : obj;
-    }
-
-    let userAction = false,
-        userActionTimer,
-        messageTimer,
-        messageArray = ['好久不见，日子过得好快呢……', '大坏蛋！你都多久没理人家了呀，嘤嘤嘤～', '嗨～快来逗我玩吧！', '拿小拳拳锤你胸口！', '记得把小家加入 Adblock 白名单哦！'];
-    window.addEventListener('mousemove', () => userAction = true);
-    window.addEventListener('keydown', () => userAction = true);
-    setInterval(() => {
-        if (userAction) {
-            userAction = false;
-            clearInterval(userActionTimer);
-            userActionTimer = null;
-        } else if (!userActionTimer) {
-            userActionTimer = setInterval(() => {
-                showMessage(randomSelection(messageArray), 6000, 9);
-            }, 20000);
-        }
-    }, 1000);
 
     window.onscroll = () => {
         if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
@@ -203,8 +204,8 @@ function loadExternalResource(url, type) {
 
 if (screen.width >= 768) {
     Promise.all([
-        loadExternalResource('https://skin.mcstaralliance.com/plugins/mcstaralliance/assets/css/waifu.css?v=0.1.6', 'css'),
-        loadExternalResource('https://skin.mcstaralliance.com/plugins/mcstaralliance/assets/js/live2d.min.js?v=0.1.6', 'js'),
+        loadExternalResource('https://skin.mcstaralliance.com/plugins/mcstaralliance/assets/css/waifu.css?v=0.1.7', 'css'),
+        loadExternalResource('https://skin.mcstaralliance.com/plugins/mcstaralliance/assets/js/live2d.min.js?v=0.1.7', 'js'),
     ]).then(() => {
         if (localStorage.getItem('waifu-display') && Date.now() - localStorage.getItem('waifu-display') <= 86400000) {
             // 已关闭
