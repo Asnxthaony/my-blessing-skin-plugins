@@ -12,15 +12,6 @@ use Illuminate\Contracts\Events\Dispatcher;
 
 return function (Dispatcher $events, Filter $filter) {
     $events->listen(Illuminate\Auth\Events\Authenticated::class, function ($payload) use ($filter) {
-        $uid = $payload->user->uid;
-
-        switch ($uid) {
-            case 9:
-                Hook::addUserBadge('チルノ', 'blue');
-            default:
-                break;
-        }
-
         $now = Carbon::now();
         switch ($now->month) {
             case '5':
