@@ -144,22 +144,24 @@ function loadWidget() {
         fetch('https://api.mcstaralliance.com/live2d/message.json')
             .then(response => response.json())
             .then(result => {
-                result.mouseover.forEach(tips => {
-                    window.addEventListener('mouseover', event => {
-                        if (!event.target.matches(tips.selector)) return;
+                window.addEventListener("mouseover", event => {
+                    for (let tips of result.mouseover) {
+                        if (!event.target.matches(tips.selector)) continue;
                         let text = randomSelection(tips.text);
-                        text = text.replace('{text}', event.target.innerText);
+                        text = text.replace("{text}", event.target.innerText);
                         showMessage(text, 4000, 8);
-                    });
+                        return;
+                    }
                 });
 
-                result.click.forEach(tips => {
-                    window.addEventListener('click', event => {
-                        if (!event.target.matches(tips.selector)) return;
+                window.addEventListener("click", event => {
+                    for (let tips of result.click) {
+                        if (!event.target.matches(tips.selector)) continue;
                         let text = randomSelection(tips.text);
-                        text = text.replace('{text}', event.target.innerText);
+                        text = text.replace("{text}", event.target.innerText);
                         showMessage(text, 4000, 8);
-                    });
+                        return;
+                    }
                 });
 
                 result.seasons.forEach(tips => {
@@ -204,8 +206,8 @@ function loadExternalResource(url, type) {
 
 if (screen.width >= 768) {
     Promise.all([
-        loadExternalResource('https://skin.mcstaralliance.com/plugins/mcstaralliance/assets/css/waifu.css?v=0.1.8', 'css'),
-        loadExternalResource('https://skin.mcstaralliance.com/plugins/mcstaralliance/assets/js/live2d.min.js?v=0.1.8', 'js'),
+        loadExternalResource('https://skin.mcstaralliance.com/plugins/mcstaralliance/assets/css/waifu.css?v=0.1.9', 'css'),
+        loadExternalResource('https://skin.mcstaralliance.com/plugins/mcstaralliance/assets/js/live2d.min.js?v=0.1.9', 'js'),
     ]).then(() => {
         if (localStorage.getItem('waifu-display') && Date.now() - localStorage.getItem('waifu-display') <= 86400000) {
             // 已关闭
