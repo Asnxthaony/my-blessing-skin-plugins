@@ -144,21 +144,21 @@ function loadWidget() {
         fetch('https://api.mcstaralliance.com/live2d/message.json')
             .then(response => response.json())
             .then(result => {
-                window.addEventListener("mouseover", event => {
+                window.addEventListener('mouseover', event => {
                     for (let tips of result.mouseover) {
                         if (!event.target.matches(tips.selector)) continue;
                         let text = randomSelection(tips.text);
-                        text = text.replace("{text}", event.target.innerText);
+                        text = text.replace('{text}', event.target.innerText);
                         showMessage(text, 4000, 8);
                         return;
                     }
                 });
 
-                window.addEventListener("click", event => {
+                window.addEventListener('click', event => {
                     for (let tips of result.click) {
                         if (!event.target.matches(tips.selector)) continue;
                         let text = randomSelection(tips.text);
-                        text = text.replace("{text}", event.target.innerText);
+                        text = text.replace('{text}', event.target.innerText);
                         showMessage(text, 4000, 8);
                         return;
                     }
