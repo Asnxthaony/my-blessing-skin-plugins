@@ -67,6 +67,44 @@ return function (Dispatcher $events, Filter $filter) {
 
     Hook::addScriptFileToPage(plugin_assets('mcstaralliance', 'js/ga.js'), ['*']);
 
+    Hook::addMenuItem('user', 1001, [
+        'title' => '账号绑定',
+        'icon'  => 'fa-link',
+        'link' => 'user/connect',
+    ]);
+
+    Hook::addRoute(function () {
+        Route::prefix('user/connect')
+            ->middleware(['web', 'auth'])
+            ->namespace('mcstaralliance')
+            ->group(function () {
+                Route::get('', 'ConnectController@list');
+                Route::get('mcbbs', 'ConnectController@mcbbs_connect');
+                Route::get('mcbbs/callback', 'ConnectController@handleMcbbsCallback');
+            });
+    });
+
+    // 因本人暂时无法修改「回调地址」，暂时注释掉原有 OAuth 登录的路由 :)
+    Hook::addRoute(function () {
+        Route::prefix('auth/login')
+            ->middleware(['web', 'auth'])
+            ->namespace('mcstaralliance')
+            ->group(function () {
+                Route::get('mcbbs/callback', 'ConnectController@handleMcbbsCallback');
+            });
+    });
+
+    $events->listen(
+        'SocialiteProviders\Manager\SocialiteWasCalled',
+        'mcstaralliance\Providers\McbbsExtendSocialite@handle'
+    );
+
+    config(['services.mcbbs' => [
+        'client_id' => env('MCBBS_KEY'),
+        'client_secret' => env('MCBBS_SECRET'),
+        'redirect' => env('MCBBS_REDIRECT_URI'),
+    ]]);
+
     Hook::addMenuItem('explore', 1001, [
         'title' => '用户使用手册',
         'link'  => '/manual',
@@ -76,7 +114,7 @@ return function (Dispatcher $events, Filter $filter) {
 
     Hook::addMenuItem('explore', 1002, [
         'title' => '捐助支持',
-        'link'  => 'https://pay.mcstaralliance.com',
+        'link'  => 'https://afdian.net/@xiaoye',
         'icon'  => 'fa-donate',
         'new-tab' => true,
     ]);
