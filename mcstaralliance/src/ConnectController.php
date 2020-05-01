@@ -25,7 +25,7 @@ class ConnectController extends Controller
 
     private function formatGroupId($groupId)
     {
-        $config = [
+        $configs = [
             "1" => "管理员",
             "2" => "超级版主",
             "3" => "版主",
@@ -64,7 +64,7 @@ class ConnectController extends Controller
             "54" => "电鳗",
         ];
 
-        return (isset($config[$groupId]) ? $config[$groupId] : $groupId);
+        return (isset($configs[$groupId]) ? $configs[$groupId] : $groupId);
     }
 
     public function mcbbs_connect()
@@ -87,7 +87,14 @@ class ConnectController extends Controller
 
             $mcbbsUser->save();
         } else {
-            abort(500, "该用户已被绑定");
+            if ($mcbbsUser->user_id == $user->uid) {
+                $mcbbsUser->forum_username = $remoteUser->nickname;
+                $mcbbsUser->forum_groupid = $remoteUser->groupid;
+
+                $mcbbsUser->save();
+            } else {
+                abort(403, "该用户已被绑定");
+            }
         }
 
         return redirect('/user/connect');
