@@ -41,7 +41,8 @@
             </div>
             <div class="card-footer">
                 {% if mcbbs.forum_uid %}
-                    <a href="javascript:alert('此功能尚未完成！')" class="btn bg-primary">点击解绑</a>
+                    <a href="{{ url('user/connect/mcbbs') }}" class="btn bg-primary">立即同步</a>
+                    <a href="javascript:alert('此功能尚未完成！')" class="btn bg-warning">点击解绑</a>
                 {% else %}
                     <a href="{{ url('user/connect/mcbbs') }}" class="btn bg-primary">立即绑定</a>
                 {% endif %}
