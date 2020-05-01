@@ -184,30 +184,30 @@ function loadWidget() {
 }
 
 function loadExternalResource(url, type) {
-     return new Promise((resolve, reject) => {
-          let elem;
+    return new Promise((resolve, reject) => {
+        let elem;
 
-          if (type === 'css') {
-               elem = document.createElement('link');
-               elem.rel = 'stylesheet';
-               elem.href = url;
-          } else if (type === 'js') {
-               elem = document.createElement('script');
-               elem.src = url;
-          }
+        if (type === 'css') {
+            elem = document.createElement('link');
+            elem.rel = 'stylesheet';
+            elem.href = url;
+        } else if (type === 'js') {
+            elem = document.createElement('script');
+            elem.src = url;
+        }
 
-          if (elem) {
-               elem.onload = () => resolve(url);
-               elem.onerror = () => reject(url);
-               document.head.appendChild(elem);
-          }
-     });
+        if (elem) {
+            elem.onload = () => resolve(url);
+            elem.onerror = () => reject(url);
+            document.head.appendChild(elem);
+        }
+    });
 }
 
 if (screen.width >= 768) {
     Promise.all([
-        loadExternalResource('https://skin.mcstaralliance.com/plugins/mcstaralliance/assets/css/waifu.css?v=0.1.9', 'css'),
-        loadExternalResource('https://skin.mcstaralliance.com/plugins/mcstaralliance/assets/js/live2d.min.js?v=0.1.9', 'js'),
+        loadExternalResource('https://skin.mcstaralliance.com/plugins/mcstaralliance/assets/css/waifu.css?v=0.2.1', 'css'),
+        loadExternalResource('https://skin.mcstaralliance.com/plugins/mcstaralliance/assets/js/live2d.min.js?v=0.2.1', 'js'),
     ]).then(() => {
         if (localStorage.getItem('waifu-display') && Date.now() - localStorage.getItem('waifu-display') <= 86400000) {
             // 已关闭

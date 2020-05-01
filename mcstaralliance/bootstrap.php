@@ -84,16 +84,6 @@ return function (Dispatcher $events, Filter $filter) {
             });
     });
 
-    // 因本人暂时无法修改「回调地址」，暂时注释掉原有 OAuth 登录的路由 :)
-    Hook::addRoute(function () {
-        Route::prefix('auth/login')
-            ->middleware(['web', 'auth'])
-            ->namespace('mcstaralliance')
-            ->group(function () {
-                Route::get('mcbbs/callback', 'ConnectController@handleMcbbsCallback');
-            });
-    });
-
     $events->listen(
         'SocialiteProviders\Manager\SocialiteWasCalled',
         'mcstaralliance\Providers\McbbsExtendSocialite@handle'
