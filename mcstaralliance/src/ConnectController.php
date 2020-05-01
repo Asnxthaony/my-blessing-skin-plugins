@@ -90,6 +90,7 @@ class ConnectController extends Controller
             if ($mcbbsUser->user_id == $user->uid) {
                 $mcbbsUser->forum_username = $remoteUser->nickname;
                 $mcbbsUser->forum_groupid = $remoteUser->groupid;
+                $mcbbsUser->updated_at = Carbon::now();
 
                 $mcbbsUser->save();
             } else {
