@@ -14,7 +14,9 @@ class ConnectController extends Controller
 
         $mcbbsUser = McbbsUser::where('user_id', $user->uid)->first();
 
-        $mcbbsUser->forum_groupname = $this->formatGroupId($mcbbsUser->forum_groupid);
+        if ($mcbbsUser) {
+            $mcbbsUser->forum_groupname = $this->formatGroupId($mcbbsUser->forum_groupid);
+        }
 
         return view('mcstaralliance::connect', [
             'mcbbs' => $mcbbsUser,
