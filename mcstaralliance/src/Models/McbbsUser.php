@@ -1,6 +1,6 @@
 <?php
 
-namespace mcstaralliance;
+namespace mcstaralliance\Models;
 
 use Illuminate\Database\Eloquent\Model;
 

@@ -1,13 +1,12 @@
 <?php
 
-use Carbon\Carbon;
-
 use App\Models\User;
 use App\Services\Hook;
 use App\Events\RenderingHeader;
 use App\Events\RenderingFooter;
 use Blessing\Filter;
 use Blessing\Rejection;
+use Carbon\Carbon;
 use Illuminate\Contracts\Events\Dispatcher;
 
 return function (Dispatcher $events, Filter $filter) {
@@ -75,24 +74,15 @@ return function (Dispatcher $events, Filter $filter) {
 
     Hook::addRoute(function () {
         Route::prefix('user/connect')
-            ->middleware(['web', 'auth'])
-            ->namespace('mcstaralliance')
-            ->group(function () {
-                Route::get('', 'ConnectController@list');
-            });
-    });
+        ->middleware(['web'])
+        ->namespace('mcstaralliance')
+        ->group(function () {
+            Route::get('', 'ConnectController@list')->middleware(['auth']);
 
-    Hook::addRoute(function () {
-        Route::prefix('user/connect')
-            ->middleware(['web'])
-            ->namespace('mcstaralliance')
-            ->group(function () {
-                Route::get('mcbbs', 'ConnectController@mcbbsLogin');
-                Route::get('mcbbs/callback', 'ConnectController@mcbbsCallback');
-            });
-    });
+            Route::get('mcbbs', 'ConnectController@mcbbsLogin');
+            Route::get('mcbbs/callback', 'ConnectController@mcbbsCallback');
+        });
 
-    Hook::addRoute(function () {
         Route::prefix('auth/login')
             ->middleware(['web', 'guest'])
             ->namespace('mcstaralliance')

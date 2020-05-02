@@ -10,6 +10,7 @@ use Blessing\Rejection;
 use Carbon\Carbon;
 use Illuminate\Contracts\Events\Dispatcher;
 use Laravel\Socialite\Facades\Socialite;
+use mcstaralliance\Models\McbbsUser;
 
 class ConnectController extends Controller
 {
