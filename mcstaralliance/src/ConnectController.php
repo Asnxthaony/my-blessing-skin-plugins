@@ -67,12 +67,12 @@ class ConnectController extends Controller
         return (isset($configs[$groupId]) ? $configs[$groupId] : $groupId);
     }
 
-    public function mcbbs_connect()
+    public function mcbbsLogin()
     {
         return Socialite::driver('mcbbs')->redirect();
     }
 
-    public function handleMcbbsCallback()
+    public function mcbbsCallback()
     {
         $user = auth()->user();
         $remoteUser = Socialite::driver('mcbbs')->user();

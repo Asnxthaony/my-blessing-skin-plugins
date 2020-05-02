@@ -79,8 +79,9 @@ return function (Dispatcher $events, Filter $filter) {
             ->namespace('mcstaralliance')
             ->group(function () {
                 Route::get('', 'ConnectController@list');
-                Route::get('mcbbs', 'ConnectController@mcbbs_connect');
-                Route::get('mcbbs/callback', 'ConnectController@handleMcbbsCallback');
+
+                Route::get('mcbbs', 'ConnectController@mcbbsLogin');
+                Route::get('mcbbs/callback', 'ConnectController@mcbbsCallback');
             });
     });
 
