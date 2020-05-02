@@ -2,9 +2,14 @@
 
 namespace mcstaralliance;
 
+use App\Models\User;
 use App\Http\Controllers\Controller;
-use Laravel\Socialite\Facades\Socialite;
+use Auth;
+use Blessing\Filter;
+use Blessing\Rejection;
 use Carbon\Carbon;
+use Illuminate\Contracts\Events\Dispatcher;
+use Laravel\Socialite\Facades\Socialite;
 
 class ConnectController extends Controller
 {
@@ -72,32 +77,46 @@ class ConnectController extends Controller
         return Socialite::driver('mcbbs')->redirect();
     }
 
-    public function mcbbsCallback()
+    public function mcbbsCallback(Dispatcher $dispatcher)
     {
         $user = auth()->user();
         $remoteUser = Socialite::driver('mcbbs')->user();
-
         $mcbbsUser = McbbsUser::where('forum_uid', $remoteUser->id)->first();
-        if (!$mcbbsUser) {
-            $mcbbsUser = new mcbbsUser();
-            $mcbbsUser->user_id = $user->uid;
-            $mcbbsUser->forum_uid = $remoteUser->id;
-            $mcbbsUser->forum_username = $remoteUser->nickname;
-            $mcbbsUser->forum_groupid = $remoteUser->groupid;
 
-            $mcbbsUser->save();
-        } else {
-            if ($mcbbsUser->user_id == $user->uid) {
+        if ($user) {
+            if (!$mcbbsUser) {
+                $mcbbsUser = new mcbbsUser();
+                $mcbbsUser->user_id = $user->uid;
+                $mcbbsUser->forum_uid = $remoteUser->id;
+                $mcbbsUser->forum_username = $remoteUser->nickname;
+                $mcbbsUser->forum_groupid = $remoteUser->groupid;
+
+                $mcbbsUser->save();
+
+                return redirect('/user/connect');
+            } elseif ($mcbbsUser->user_id == $user->uid) {
                 $mcbbsUser->forum_username = $remoteUser->nickname;
                 $mcbbsUser->forum_groupid = $remoteUser->groupid;
                 $mcbbsUser->updated_at = Carbon::now();
 
                 $mcbbsUser->save();
+
+                return redirect('/user/connect');
             } else {
-                abort(403, "该用户已被绑定");
+                abort(403, "此 MCBBS 账号已被其他用户绑定");
+            }
+        } else {
+            if ($mcbbsUser) {
+                $user = User::where('uid', $mcbbsUser->user_id)->first();
+
+                $dispatcher->dispatch('auth.login.ready', [$user]);
+                Auth::login($user);
+                $dispatcher->dispatch('auth.login.succeeded', [$user]);
+
+                return redirect('/user');
+            } else {
+                abort(403, "请在「用户中心」中使用「账号绑定」关联账号");
             }
         }
-
-        return redirect('/user/connect');
     }
 }

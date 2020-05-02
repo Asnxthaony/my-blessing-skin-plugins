@@ -79,9 +79,25 @@ return function (Dispatcher $events, Filter $filter) {
             ->namespace('mcstaralliance')
             ->group(function () {
                 Route::get('', 'ConnectController@list');
+            });
+    });
 
+    Hook::addRoute(function () {
+        Route::prefix('user/connect')
+            ->middleware(['web'])
+            ->namespace('mcstaralliance')
+            ->group(function () {
                 Route::get('mcbbs', 'ConnectController@mcbbsLogin');
                 Route::get('mcbbs/callback', 'ConnectController@mcbbsCallback');
+            });
+    });
+
+    Hook::addRoute(function () {
+        Route::prefix('auth/login')
+            ->middleware(['web', 'guest'])
+            ->namespace('mcstaralliance')
+            ->group(function () {
+                Route::get('mcbbs', 'ConnectController@mcbbsLogin');
             });
     });
 
@@ -95,6 +111,9 @@ return function (Dispatcher $events, Filter $filter) {
         'client_secret' => env('MCBBS_SECRET'),
         'redirect' => env('MCBBS_REDIRECT_URI'),
     ]]);
+
+    resolve('oauth.providers')
+    ->put('mcbbs', ['icon' => 'bootstrap', 'displayName' => '我的世界中文论坛']);
 
     Hook::addMenuItem('explore', 1001, [
         'title' => '用户使用手册',
