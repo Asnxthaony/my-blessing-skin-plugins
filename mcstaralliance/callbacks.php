@@ -7,7 +7,7 @@ return [
                 $table->increments('id');
                 $table->integer('user_id')->unique();
                 $table->mediumInteger('forum_uid')->unique();
-                $table->char('forum_username', 50);
+                $table->char('forum_username', 15);
                 $table->smallInteger('forum_groupid');
                 $table->timestamps();
             });

@@ -11,28 +11,13 @@ use Illuminate\Contracts\Events\Dispatcher;
 
 return function (Dispatcher $events, Filter $filter) {
     $events->listen(Illuminate\Auth\Events\Authenticated::class, function ($payload) use ($filter) {
-        $now = Carbon::now();
-        switch ($now->month) {
-            case '5':
-                switch ($now->day) {
-                    case '35':
-                        Hook::addUserBadge('Impossible', 'black');
-                        break;
-                }
-                break;
-        }
-
-        $filter->add('user_can_edit_profile', function ($can, $action, $addition) {
+        $filter->add('user_can_edit_profile', function ($can, $action) {
             switch ($action) {
                 case 'delete':
                     return new Rejection('请使用 Telegram 联系 @Asnxthaony 申请删除您的账号。');
                 default:
                     break;
             }
-        });
-
-        $filter->add('user_can_rename_player', function ($can, $player, $newName) {
-            return new Rejection('请使用 Telegram 联系 @Asnxthaony 申请更改您的角色名。');
         });
 
         $filter->add('grid:user.profile', function ($grid) {
@@ -46,9 +31,7 @@ return function (Dispatcher $events, Filter $filter) {
         $excludes = ['user/player', 'user/closet', 'skinlib'];
         if (! (in_array($path, $excludes) || explode("/", $path, 2)[0] == 'skinlib')) {
             $now = Carbon::now();
-            if ($now->year == 2020 && $now->month == 4 && $now->day == 4) {
-                $event->addContent('<style>html { filter: gray; -webkit-filter: grayscale(100%); }</style>');
-            }
+
             // 国家公祭日
             if ($now->month == 12 && $now->day == 13) {
                 $event->addContent('<style>html { filter: gray; -webkit-filter: grayscale(100%); }</style>');
@@ -72,16 +55,29 @@ return function (Dispatcher $events, Filter $filter) {
         'link' => 'user/connect',
     ]);
 
+    Hook::addMenuItem('admin', 1001, [
+        'title' => '绑 - 我的世界中文论坛',
+        'icon'  => 'fa-link',
+        'link' => 'admin/connect/mcbbs',
+    ]);
+
     Hook::addRoute(function () {
         Route::prefix('user/connect')
-        ->middleware(['web'])
-        ->namespace('mcstaralliance')
-        ->group(function () {
-            Route::get('', 'ConnectController@list')->middleware(['auth']);
+            ->middleware(['web'])
+            ->namespace('mcstaralliance')
+            ->group(function () {
+                Route::get('', 'ConnectController@list')->middleware(['auth']);
 
-            Route::get('mcbbs', 'ConnectController@mcbbsLogin');
-            Route::get('mcbbs/callback', 'ConnectController@mcbbsCallback');
-        });
+                Route::get('mcbbs', 'ConnectController@mcbbsLogin');
+                Route::get('mcbbs/callback', 'ConnectController@mcbbsCallback');
+            });
+
+        Route::prefix('admin/connect')
+            ->middleware(['web', 'auth', 'role:admin'])
+            ->namespace('mcstaralliance')
+            ->group(function () {
+                Route::get('mcbbs', 'ConfigController@mcbbsPage');
+            });
 
         Route::prefix('auth/login')
             ->middleware(['web', 'guest'])
@@ -102,8 +98,14 @@ return function (Dispatcher $events, Filter $filter) {
         'redirect' => env('MCBBS_REDIRECT_URI'),
     ]]);
 
-    resolve('oauth.providers')
-    ->put('mcbbs', ['icon' => 'bootstrap', 'displayName' => '我的世界中文论坛']);
+    $filter->add('oauth_providers', function (Collection $providers) {
+        $providers->put('mcbbs', [
+            'icon' => 'cubes fas',
+            'displayName' => '我的世界中文论坛',
+        ]);
+
+        return $providers;
+    });
 
     Hook::addMenuItem('explore', 1001, [
         'title' => '用户使用手册',

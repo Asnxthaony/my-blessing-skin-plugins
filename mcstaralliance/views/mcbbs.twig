@@ -1,0 +1,47 @@
+{% extends 'admin.base' %}
+
+{% block title %}账号绑定 - 我的世界中文论坛{% endblock %}
+
+{% block content %}
+
+<div class="card">
+  <div class="card-body p-0">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>UID</th>
+            <th>论坛 UID</th>
+            <th>论坛用户名</th>
+            <th>论坛用户组</th>
+            <th>绑定时间</th>
+            <th>同步时间</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for log in logs %}
+            <tr>
+              <td>{{ log.id }}</td>
+              <td>{{ log.user_id }}</td>
+              <td>{{ log.forum_uid }}</td>
+              <td>{{ log.forum_username }}</td>
+              <td>{{ group_names[log.forum_groupid] }}</td>
+              <td>{{ log.created_at }}</td>
+              <td>{{ log.updated_at }}</td>
+            </tr>
+          {% else %}
+            <tr>
+              <td colspan="7">暂无记录</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <div class="card-footer">
+      <div class="float-right">
+        {{ logs.links()|raw }}
+      </div>
+    </div>
+</div>
+
+{% endblock %}

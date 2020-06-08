@@ -206,8 +206,8 @@ function loadExternalResource(url, type) {
 
 if (screen.width >= 768) {
     Promise.all([
-        loadExternalResource('https://skin.mcstaralliance.com/plugins/mcstaralliance/assets/css/waifu.css?v=0.4.7', 'css'),
-        loadExternalResource('https://skin.mcstaralliance.com/plugins/mcstaralliance/assets/js/live2d.min.js?v=0.4.7', 'js'),
+        loadExternalResource('https://skin.mcstaralliance.com/plugins/mcstaralliance/assets/css/waifu.css?v=1.0.0', 'css'),
+        loadExternalResource('https://cdn.jsdelivr.net/gh/stevenjoezhang/live2d-widget@master/live2d.min.js?v1.0.0', 'js'),
     ]).then(() => {
         if (localStorage.getItem('waifu-display') && Date.now() - localStorage.getItem('waifu-display') <= 86400000) {
             // 已关闭
