@@ -8,6 +8,7 @@ use Blessing\Filter;
 use Blessing\Rejection;
 use Carbon\Carbon;
 use Illuminate\Contracts\Events\Dispatcher;
+use Illuminate\Support\Collection;
 
 return function (Dispatcher $events, Filter $filter) {
     $events->listen(Illuminate\Auth\Events\Authenticated::class, function ($payload) use ($filter) {
