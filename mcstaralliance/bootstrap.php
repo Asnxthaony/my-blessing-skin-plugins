@@ -3,7 +3,6 @@
 use App\Models\User;
 use App\Services\Hook;
 use App\Events\RenderingHeader;
-use App\Events\RenderingFooter;
 use Blessing\Filter;
 use Blessing\Rejection;
 use Carbon\Carbon;
@@ -42,13 +41,6 @@ return function (Dispatcher $events, Filter $filter) {
 
     // Live2D
     Hook::addScriptFileToPage(plugin_assets('mcstaralliance', 'js/waifu-tips.js'), ['user', 'user/*']);
-
-    $events->listen(RenderingFooter::class, function ($event) {
-        // Goggle Analytics
-        $event->addContent('<script async src="https://www.googletagmanager.com/gtag/js?id=UA-154807642-1"></script>');
-    });
-
-    Hook::addScriptFileToPage(plugin_assets('mcstaralliance', 'js/ga.js'), ['*']);
 
     Hook::addMenuItem('user', 1001, [
         'title' => '账号绑定',
