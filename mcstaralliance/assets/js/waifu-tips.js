@@ -6,7 +6,6 @@ function loadWidget() {
             <div id="waifu-tips"></div>
             <canvas id="live2d" width="800" height="800"></canvas>
             <div id="waifu-tool">
-                <span class="fa fa-lg fa-comment"></span>
                 <span class="fa fa-lg fa-paper-plane"></span>
                 <span class="fa fa-lg fa-street-view"></span>
                 <span class="fa fa-lg fa-camera-retro"></span>
@@ -41,15 +40,13 @@ function loadWidget() {
     }, 1000);
 
     (function registerEventListener() {
-        document.querySelector('#waifu-tool .fa-comment').addEventListener('click', showHitokoto);
-
         document.querySelector('#waifu-tool .fa-paper-plane').addEventListener('click', () => {
             if (window.Asteroids) {
                 if (!window.ASTEROIDSPLAYERS) window.ASTEROIDSPLAYERS = [];
                 window.ASTEROIDSPLAYERS.push(new Asteroids());
             } else {
-                let script = document.createElement('script');
-                script.src = 'https://cdn.jsdelivr.net/gh/GalaxyMimi/CDN/asteroids.js';
+                const script = document.createElement('script');
+                script.src = 'https://cdn.jsdelivr.net/gh/stevenjoezhang/asteroids/asteroids.js';
                 document.head.appendChild(script);
             }
         });
@@ -78,8 +75,8 @@ function loadWidget() {
     })();
 
     (function welcomeMessage() {
-        let text,
-            now = new Date().getHours();
+        let text;
+        const now = new Date().getHours();
 
         if (now > 5 && now <= 7)
             text = '早上好！一日之计在于晨，美好的一天就要开始了。';
@@ -109,18 +106,6 @@ function loadWidget() {
         }
     };
 
-    function showHitokoto() {
-        fetch('https://v1.hitokoto.cn')
-            .then(response => response.json())
-            .then(result => {
-                let text = `这句一言来自 <span>「${result.from}」</span>，是 <span>${result.creator}</span> 在 hitokoto.cn 投稿的。`;
-                showMessage(result.hitokoto, 6000, 9);
-                setTimeout(() => {
-                    showMessage(text, 4000, 9);
-                }, 6000);
-            });
-    }
-
     function showMessage(text, timeout, priority) {
         if (!text || (sessionStorage.getItem('waifu-text') && sessionStorage.getItem('waifu-text') > priority)) return;
         if (messageTimer) {
@@ -129,7 +114,7 @@ function loadWidget() {
         }
         text = randomSelection(text);
         sessionStorage.setItem('waifu-text', priority);
-        let tips = document.getElementById('waifu-tips');
+        const tips = document.getElementById('waifu-tips');
         tips.innerHTML = text;
         tips.classList.add('waifu-tips-active');
         messageTimer = setTimeout(() => {
@@ -165,13 +150,13 @@ function loadWidget() {
                 });
 
                 result.seasons.forEach(tips => {
-                    let now = new Date(),
+                    const now = new Date(),
                         after = tips.date.split('-')[0],
                         before = tips.date.split('-')[1] || after;
                     if ((after.split('/')[0] <= now.getMonth() + 1 && now.getMonth() + 1 <= before.split('/')[0]) && (after.split('/')[1] <= now.getDate() && now.getDate() <= before.split('/')[1])) {
-                        var text = Array.isArray(tips.text) ? tips.text[Math.floor(Math.random() * tips.text.length)] : tips.text;
+                        let text = Array.isArray(tips.text) ? tips.text[Math.floor(Math.random() * tips.text.length)] : tips.text;
                         text = text.replace('{year}', now.getFullYear());
-                        //showMessage(text, 7000, true);
+                        // showMessage(text, 7000, true);
                         messageArray.push(text);
                     }
                 });
@@ -207,8 +192,8 @@ function loadExternalResource(url, type) {
 
 if (screen.width >= 768) {
     Promise.all([
-        loadExternalResource('https://skin.mcstaralliance.com/plugins/mcstaralliance/assets/css/waifu.css?v=1.0.4', 'css'),
-        loadExternalResource('https://cdn.jsdelivr.net/gh/stevenjoezhang/live2d-widget@master/live2d.min.js?v=1.0.4', 'js'),
+        loadExternalResource('https://skin.mcstaralliance.com/plugins/mcstaralliance/assets/css/waifu.css?v=1.0.5', 'css'),
+        loadExternalResource('https://cdn.jsdelivr.net/gh/stevenjoezhang/live2d-widget@master/live2d.min.js?v=1.0.5', 'js'),
     ]).then(() => {
         if (localStorage.getItem('waifu-display') && Date.now() - localStorage.getItem('waifu-display') <= 86400000) {
             // 已关闭

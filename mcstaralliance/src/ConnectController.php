@@ -5,8 +5,6 @@ namespace mcstaralliance;
 use App\Models\User;
 use App\Http\Controllers\Controller;
 use Auth;
-use Blessing\Filter;
-use Blessing\Rejection;
 use Carbon\Carbon;
 use Illuminate\Contracts\Events\Dispatcher;
 use Laravel\Socialite\Facades\Socialite;
