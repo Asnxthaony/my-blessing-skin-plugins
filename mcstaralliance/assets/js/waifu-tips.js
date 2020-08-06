@@ -130,9 +130,9 @@ function loadWidget() {
             .then(response => response.json())
             .then(result => {
                 window.addEventListener('mouseover', event => {
-                    for (let tips of result.mouseover) {
-                        if (!event.target.matches(tips.selector)) continue;
-                        let text = randomSelection(tips.text);
+                    for (let { selector, text } of result.mouseover) {
+                        if (!event.target.matches(selector)) continue;
+                        text = randomSelection(text);
                         text = text.replace('{text}', event.target.innerText);
                         showMessage(text, 4000, 8);
                         return;
@@ -140,21 +140,21 @@ function loadWidget() {
                 });
 
                 window.addEventListener('click', event => {
-                    for (let tips of result.click) {
-                        if (!event.target.matches(tips.selector)) continue;
-                        let text = randomSelection(tips.text);
+                    for (let { selector, text } of result.click) {
+                        if (!event.target.matches(selector)) continue;
+                        text = randomSelection(text);
                         text = text.replace('{text}', event.target.innerText);
                         showMessage(text, 4000, 8);
                         return;
                     }
                 });
 
-                result.seasons.forEach(tips => {
+                result.seasons.forEach(({ date, text }) => {
                     const now = new Date(),
-                        after = tips.date.split('-')[0],
-                        before = tips.date.split('-')[1] || after;
-                    if ((after.split('/')[0] <= now.getMonth() + 1 && now.getMonth() + 1 <= before.split('/')[0]) && (after.split('/')[1] <= now.getDate() && now.getDate() <= before.split('/')[1])) {
-                        let text = Array.isArray(tips.text) ? tips.text[Math.floor(Math.random() * tips.text.length)] : tips.text;
+                        after = date.split('-')[0],
+                        before = date.split('-')[1] || after;
+                        if ((after.split("/")[0] <= now.getMonth() + 1 && now.getMonth() + 1 <= before.split("/")[0]) && (after.split("/")[1] <= now.getDate() && now.getDate() <= before.split("/")[1])) {
+                        text = randomSelection(text);
                         text = text.replace('{year}', now.getFullYear());
                         // showMessage(text, 7000, true);
                         messageArray.push(text);
@@ -192,8 +192,8 @@ function loadExternalResource(url, type) {
 
 if (screen.width >= 768) {
     Promise.all([
-        loadExternalResource('https://skin.mcstaralliance.com/plugins/mcstaralliance/assets/css/waifu.css?v=1.0.5', 'css'),
-        loadExternalResource('https://cdn.jsdelivr.net/gh/stevenjoezhang/live2d-widget@master/live2d.min.js?v=1.0.5', 'js'),
+        loadExternalResource('https://skin.mcstaralliance.com/plugins/mcstaralliance/assets/css/waifu.css?v=1.0.6', 'css'),
+        loadExternalResource('https://cdn.jsdelivr.net/gh/stevenjoezhang/live2d-widget@master/live2d.min.js?v=1.0.6', 'js'),
     ]).then(() => {
         if (localStorage.getItem('waifu-display') && Date.now() - localStorage.getItem('waifu-display') <= 86400000) {
             // 已关闭

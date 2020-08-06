@@ -2,11 +2,10 @@
 
 namespace mcstaralliance\Providers;
 
-use Laravel\Socialite\Two\AbstractProvider;
-use Laravel\Socialite\Two\ProviderInterface;
-use Laravel\Socialite\Two\User;
+use SocialiteProviders\Manager\OAuth2\AbstractProvider;
+use SocialiteProviders\Manager\OAuth2\User;
 
-class McbbsProvider extends AbstractProvider implements ProviderInterface
+class McbbsProvider extends AbstractProvider
 {
     protected $openId;
 
@@ -87,14 +86,5 @@ class McbbsProvider extends AbstractProvider implements ProviderInterface
         return array_merge(parent::getTokenFields($code), [
             'grant_type' => 'authorization_code'
         ]);
-    }
-
-    public static function additionalConfigKeys()
-    {
-        return [];
-    }
-
-    public function setConfig($config)
-    {
     }
 }
