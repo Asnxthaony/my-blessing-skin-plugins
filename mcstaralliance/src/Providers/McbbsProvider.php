@@ -14,7 +14,7 @@ class McbbsProvider extends AbstractProvider
      */
     protected function getAuthUrl($state)
     {
-        return 'https://www.mcbbs.net/plugin.php?id=mcbbs_api:oauth2&' . http_build_query($this->getCodeFields($state), '', '&');
+        return 'https://www.mcbbs.net/plugin.php?id=mcbbs_api:oauth2&'.http_build_query($this->getCodeFields($state), '', '&');
     }
 
     /**
@@ -42,6 +42,7 @@ class McbbsProvider extends AbstractProvider
 
         $user = json_decode($response->getBody(), true);
 
+        // @see https://wiki.open.qq.com/wiki/website/公共返回码说明
         // {"error_code":"100500","error_description":"触发接口访问限制"}
         if (isset($user['error_code'])) {
             abort(500, $user['error_description']);
@@ -56,10 +57,10 @@ class McbbsProvider extends AbstractProvider
     protected function mapUserToObject(array $user)
     {
         return (new User())->setRaw($user)->map([
-            'id'       => $user['uid'],
+            'id' => $user['uid'],
             'nickname' => $user['username'],
-            'avatar'   => $user['avatar'],
-            'groupid'  => $user['groupid'],
+            'avatar' => $user['avatar'],
+            'groupid' => $user['groupid'],
         ]);
     }
 
@@ -69,7 +70,7 @@ class McbbsProvider extends AbstractProvider
     public function getAccessTokenResponse($code)
     {
         $response = $this->getHttpClient()->post($this->getTokenUrl(), [
-            'form_params' => $this->getTokenFields($code)
+            'form_params' => $this->getTokenFields($code),
         ]);
 
         $data = json_decode($response->getBody(), true);
@@ -84,7 +85,7 @@ class McbbsProvider extends AbstractProvider
     protected function getTokenFields($code)
     {
         return array_merge(parent::getTokenFields($code), [
-            'grant_type' => 'authorization_code'
+            'grant_type' => 'authorization_code',
         ]);
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-if (! function_exists('yx_get_group_names')) {
+if (!function_exists('yx_get_group_names')) {
     function yx_get_group_names()
     {
         return [
@@ -45,10 +45,11 @@ if (! function_exists('yx_get_group_names')) {
     }
 }
 
-if (! function_exists('yx_gid_to_gn')) {
+if (!function_exists('yx_gid_to_gn')) {
     function yx_gid_to_gn($group_id)
     {
         $group_names = yx_get_group_names();
-        return (isset($group_names[$group_id]) ? $group_names[$group_id] : $group_id);
+
+        return isset($group_names[$group_id]) ? $group_names[$group_id] : $group_id;
     }
 }

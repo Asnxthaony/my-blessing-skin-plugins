@@ -2,7 +2,7 @@
 
 return [
     App\Events\PluginWasEnabled::class => function () {
-        if (! Schema::hasTable('connect_mcbbs')) {
+        if (!Schema::hasTable('connect_mcbbs')) {
             Schema::create('connect_mcbbs', function ($table) {
                 $table->increments('id');
                 $table->integer('user_id')->unique();

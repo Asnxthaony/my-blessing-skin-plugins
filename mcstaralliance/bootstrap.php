@@ -1,8 +1,7 @@
 <?php
 
-use App\Models\User;
-use App\Services\Hook;
 use App\Events\RenderingHeader;
+use App\Services\Hook;
 use Blessing\Filter;
 use Blessing\Rejection;
 use Carbon\Carbon;
@@ -22,6 +21,7 @@ return function (Dispatcher $events, Filter $filter) {
 
         $filter->add('grid:user.profile', function ($grid) {
             array_unshift($grid['widgets'][0][0], 'mcstaralliance::uid');
+
             return $grid;
         });
     });
@@ -29,7 +29,7 @@ return function (Dispatcher $events, Filter $filter) {
     $events->listen(RenderingHeader::class, function ($event) {
         $path = request()->path();
         $excludes = ['user/player', 'user/closet', 'skinlib'];
-        if (! (in_array($path, $excludes) || explode("/", $path, 2)[0] == 'skinlib')) {
+        if (!(in_array($path, $excludes) || explode('/', $path, 2)[0] == 'skinlib')) {
             $now = Carbon::now();
 
             // 国家公祭日
@@ -44,13 +44,13 @@ return function (Dispatcher $events, Filter $filter) {
 
     Hook::addMenuItem('user', 1001, [
         'title' => '账号绑定',
-        'icon'  => 'fa-link',
+        'icon' => 'fa-link',
         'link' => 'user/connect',
     ]);
 
     Hook::addMenuItem('admin', 1001, [
         'title' => '绑 - 我的世界中文论坛',
-        'icon'  => 'fa-link',
+        'icon' => 'fa-link',
         'link' => 'admin/connect/mcbbs',
     ]);
 
@@ -102,15 +102,15 @@ return function (Dispatcher $events, Filter $filter) {
 
     Hook::addMenuItem('explore', 1001, [
         'title' => '用户使用手册',
-        'link'  => '/manual',
-        'icon'  => 'fa-book',
+        'link' => '/manual',
+        'icon' => 'fa-book',
         'new-tab' => true,
     ]);
 
     Hook::addMenuItem('explore', 1002, [
         'title' => '捐助支持',
-        'link'  => 'https://afdian.net/@xiaoye',
-        'icon'  => 'fa-donate',
+        'link' => 'https://afdian.net/@xiaoye',
+        'icon' => 'fa-donate',
         'new-tab' => true,
     ]);
 };

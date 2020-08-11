@@ -2,8 +2,8 @@
 
 namespace mcstaralliance;
 
-use App\Models\User;
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Auth;
 use Carbon\Carbon;
 use Illuminate\Contracts\Events\Dispatcher;
