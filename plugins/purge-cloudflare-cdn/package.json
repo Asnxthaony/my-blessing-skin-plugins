@@ -1,0 +1,17 @@
+{
+  "name": "purge-cloudflare-cdn",
+  "version": "0.1.0",
+  "title": "刷新 Cloudflare CDN",
+  "description": "当资源被更新时，自动刷新 Cloudflare CDN 的缓存。",
+  "author": "Asnxthaony",
+  "namespace": "Asnxthaony\\PurgeCloudflareCdn",
+  "require": {
+    "blessing-skin-server": "^5"
+  },
+  "enchants": {
+    "icon": {
+      "fa": "fire",
+      "bg": "orange"
+    }
+  }
+}
