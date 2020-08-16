@@ -1,1 +1,7 @@
+node_modules
+plugins/*/vendor
+plugins/*/assets/**/*.js
+plugins/*/assets/**/*.map
 .php_cs.cache
+composer.lock
+yarn-error.log

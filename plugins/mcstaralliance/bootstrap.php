@@ -6,9 +6,10 @@ use Blessing\Filter;
 use Blessing\Rejection;
 use Carbon\Carbon;
 use Illuminate\Contracts\Events\Dispatcher;
+use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 
-return function (Dispatcher $events, Filter $filter) {
+return function (Dispatcher $events, Request $request, Filter $filter) {
     $events->listen(Illuminate\Auth\Events\Authenticated::class, function ($payload) use ($filter) {
         $filter->add('user_can_edit_profile', function ($can, $action) {
             switch ($action) {
@@ -41,6 +42,9 @@ return function (Dispatcher $events, Filter $filter) {
 
     // Live2D
     Hook::addScriptFileToPage(plugin_assets('mcstaralliance', 'js/waifu-tips.js'), ['user', 'user/*']);
+
+    // MCBBS
+    Hook::addScriptFileToPage(plugin_assets('mcstaralliance', 'js/mcbbs.js'), ['auth/login', 'auth/register']);
 
     Hook::addMenuItem('user', 1001, [
         'title' => '账号绑定',
@@ -80,10 +84,11 @@ return function (Dispatcher $events, Filter $filter) {
             });
     });
 
-    $events->listen(
-        'SocialiteProviders\Manager\SocialiteWasCalled',
-        'mcstaralliance\Providers\McbbsExtendSocialite@handle'
-    );
+    $events->listen('SocialiteProviders\Manager\SocialiteWasCalled', 'mcstaralliance\Providers\McbbsExtendSocialite@handle');
+
+    if (($request->is('auth/login') || $request->is('auth/register')) && $request->isMethod('POST') && $request->has('token')) {
+        $events->listen('auth.login.succeeded', 'mcstaralliance\ConnectController@mcbbsNewBind');
+    }
 
     config(['services.mcbbs' => [
         'client_id' => env('MCBBS_KEY'),
@@ -99,6 +104,8 @@ return function (Dispatcher $events, Filter $filter) {
 
         return $providers;
     });
+
+    // Misc
 
     Hook::addMenuItem('explore', 1001, [
         'title' => '用户使用手册',

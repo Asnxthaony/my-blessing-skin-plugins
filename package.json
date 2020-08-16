@@ -1,0 +1,35 @@
+{
+  "version": "0.0.0",
+  "engines": {
+    "node": ">=10.15.0"
+  },
+  "private": true,
+  "workspaces": [
+    "plugins/*"
+  ],
+  "scripts": {
+    "dev": "webpack -d -w",
+    "build": "webpack -p"
+  },
+  "devDependencies": {
+    "@gplane/tsconfig": "^1.1.0",
+    "@types/gulp": "^4.0.6",
+    "@types/node": "^14.0.13",
+    "@types/react": "^16.9.32",
+    "@types/react-dom": "^16.9.6",
+    "@types/webpack": "^4.41.17",
+    "fast-glob": "^3.2.4",
+    "ts-loader": "^8.0.1",
+    "ts-node": "^8.10.2",
+    "typescript": "^3.9.5",
+    "webpack": "^5.0.0-beta.18",
+    "webpack-cli": "^4.0.0-beta.8"
+  },
+  "prettier": {
+    "printWidth": 80,
+    "semi": false,
+    "singleQuote": true,
+    "trailingComma": "all",
+    "tabWidth": 2
+  }
+}

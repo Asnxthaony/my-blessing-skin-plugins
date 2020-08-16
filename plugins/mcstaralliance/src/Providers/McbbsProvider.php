@@ -9,25 +9,16 @@ class McbbsProvider extends AbstractProvider
 {
     protected $openId;
 
-    /**
-     * {@inheritdoc}
-     */
     protected function getAuthUrl($state)
     {
         return 'https://www.mcbbs.net/plugin.php?id=mcbbs_api:oauth2&'.http_build_query($this->getCodeFields($state), '', '&');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function getTokenUrl()
     {
         return 'https://www.mcbbs.net/plugin.php?id=mcbbs_api:token';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function getUserByToken($token)
     {
         $response = $this->getHttpClient()->get('https://www.mcbbs.net/plugin.php', [
@@ -42,8 +33,6 @@ class McbbsProvider extends AbstractProvider
 
         $user = json_decode($response->getBody(), true);
 
-        // @see https://wiki.open.qq.com/wiki/website/公共返回码说明
-        // {"error_code":"100500","error_description":"触发接口访问限制"}
         if (isset($user['error_code'])) {
             abort(500, $user['error_description']);
         }
@@ -51,9 +40,6 @@ class McbbsProvider extends AbstractProvider
         return $user;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function mapUserToObject(array $user)
     {
         return (new User())->setRaw($user)->map([
@@ -64,9 +50,6 @@ class McbbsProvider extends AbstractProvider
         ]);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getAccessTokenResponse($code)
     {
         $response = $this->getHttpClient()->post($this->getTokenUrl(), [
@@ -79,9 +62,6 @@ class McbbsProvider extends AbstractProvider
         return $data;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function getTokenFields($code)
     {
         return array_merge(parent::getTokenFields($code), [

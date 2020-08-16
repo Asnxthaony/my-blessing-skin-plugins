@@ -8,6 +8,7 @@ use Auth;
 use Carbon\Carbon;
 use Illuminate\Contracts\Events\Dispatcher;
 use Laravel\Socialite\Facades\Socialite;
+use Lcobucci\JWT;
 use mcstaralliance\Models\McbbsUser;
 
 require __DIR__.'/Utils/helpers.php';
@@ -16,9 +17,7 @@ class ConnectController extends Controller
 {
     public function list()
     {
-        $user = auth()->user();
-
-        $mcbbsUser = McbbsUser::where('user_id', $user->uid)->first();
+        $mcbbsUser = McbbsUser::where('user_id', auth()->id())->first();
 
         if ($mcbbsUser) {
             $mcbbsUser->forum_groupname = yx_gid_to_gn($mcbbsUser->forum_groupid);
@@ -42,7 +41,7 @@ class ConnectController extends Controller
 
         if ($user) {
             if (!$mcbbsUser) {
-                $mcbbsUser = new mcbbsUser();
+                $mcbbsUser = new McbbsUser();
                 $mcbbsUser->user_id = $user->uid;
                 $mcbbsUser->forum_uid = $remoteUser->id;
                 $mcbbsUser->forum_username = $remoteUser->nickname;
@@ -72,8 +71,43 @@ class ConnectController extends Controller
 
                 return redirect('/user');
             } else {
-                abort(403, '请在「用户中心」内使用「账号绑定」功能关联账号');
+                $now = Carbon::now();
+                $builder = new JWT\Builder();
+                $token = (string) $builder->issuedBy('Mcbbs-Auth')
+                    ->issuedAt($now->timestamp)
+                    ->expiresAt($now->addSeconds(300)->timestamp)
+                    ->withClaim('uid', $remoteUser->id)
+                    ->withClaim('name', $remoteUser->nickname)
+                    ->withClaim('gid', $remoteUser->groupid)
+                    ->getToken(new JWT\Signer\Hmac\Sha256(), new JWT\Signer\Key(config('jwt.secret', '')));
+
+                return redirect(route('auth.register', ['token' => $token]));
             }
+        }
+    }
+
+    public function mcbbsNewBind(User $user)
+    {
+        $token = (new JWT\Parser())->parse(request()->input('token'));
+
+        $validationData = new JWT\ValidationData();
+        $validationData->setIssuer('Mcbbs-Auth');
+
+        $isValid = $token->validate($validationData) && $token->verify(
+            new JWT\Signer\Hmac\Sha256(),
+            new JWT\Signer\Key(config('jwt.secret', ''))
+        );
+
+        if ($isValid) {
+            $mcbbsUser = new McbbsUser();
+            $mcbbsUser->user_id = $user->uid;
+            $mcbbsUser->forum_uid = $token->getClaim('uid');
+            $mcbbsUser->forum_username = $token->getClaim('name');
+            $mcbbsUser->forum_groupid = $token->getClaim('gid');
+
+            $mcbbsUser->save();
+        } else {
+            abort(403, 'Token 无效，请稍后再试。');
         }
     }
 }
