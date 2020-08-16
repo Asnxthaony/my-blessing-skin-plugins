@@ -76,9 +76,9 @@ class ConnectController extends Controller
                 $token = (string) $builder->issuedBy('Mcbbs-Auth')
                     ->issuedAt($now->timestamp)
                     ->expiresAt($now->addSeconds(300)->timestamp)
-                    ->withClaim('uid', $remoteUser->id)
+                    ->withClaim('uid', (int) $remoteUser->id)
                     ->withClaim('name', $remoteUser->nickname)
-                    ->withClaim('gid', $remoteUser->groupid)
+                    ->withClaim('gid', (int) $remoteUser->groupid)
                     ->getToken(new JWT\Signer\Hmac\Sha256(), new JWT\Signer\Key(config('jwt.secret', '')));
 
                 return redirect(route('auth.register', ['token' => $token]));
@@ -99,15 +99,22 @@ class ConnectController extends Controller
         );
 
         if ($isValid) {
-            $mcbbsUser = new McbbsUser();
-            $mcbbsUser->user_id = $user->uid;
-            $mcbbsUser->forum_uid = $token->getClaim('uid');
-            $mcbbsUser->forum_username = $token->getClaim('name');
-            $mcbbsUser->forum_groupid = $token->getClaim('gid');
+            $forum_uid = $token->getClaim('uid');
 
-            $mcbbsUser->save();
+            $mcbbsUser = McbbsUser::where('forum_uid', $forum_uid)->first();
+            if ($mcbbsUser) {
+                abort(403, '此 MCBBS 账号已被其他用户绑定');
+            } else {
+                $mcbbsUser = new McbbsUser();
+                $mcbbsUser->user_id = $user->uid;
+                $mcbbsUser->forum_uid = $forum_uid;
+                $mcbbsUser->forum_username = $token->getClaim('name');
+                $mcbbsUser->forum_groupid = $token->getClaim('gid');
+
+                $mcbbsUser->save();
+            }
         } else {
-            abort(403, 'Token 无效，请稍后再试。');
+            abort(403, '令牌无效，请稍后再试。');
         }
     }
 }
