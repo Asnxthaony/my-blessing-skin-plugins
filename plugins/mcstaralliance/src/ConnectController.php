@@ -2,11 +2,11 @@
 
 namespace mcstaralliance;
 
-use App\Http\Controllers\Controller;
 use App\Models\User;
 use Auth;
 use Carbon\Carbon;
 use Illuminate\Contracts\Events\Dispatcher;
+use Illuminate\Routing\Controller;
 use Laravel\Socialite\Facades\Socialite;
 use Lcobucci\JWT;
 use mcstaralliance\Models\McbbsUser;

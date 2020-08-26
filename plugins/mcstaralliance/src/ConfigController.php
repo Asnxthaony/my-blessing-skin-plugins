@@ -2,8 +2,8 @@
 
 namespace mcstaralliance;
 
-use App\Http\Controllers\Controller;
-use DB;
+use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\DB;
 
 require __DIR__.'/Utils/helpers.php';
 
