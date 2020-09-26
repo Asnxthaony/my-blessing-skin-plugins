@@ -1,0 +1,17 @@
+title: Audit Logs
+header:
+  action: Action
+  detail: Details
+  user-agent: User Agent
+  created_at: Created At
+show-details: Show Details
+no-records: No records.
+actions:
+  login: Logged in
+  failed-login: Failed to login
+  forgot-password: Password reset requested
+  password-updated: Password updated
+  email-updated: Email updated
+  user-deleted: User deleted
+  yggdrasil-authenticate: Logged in (Yggdrasil)
+  yggdrasil-failed-authenticate: Failed to login (Yggdrasil)

@@ -1,0 +1,19 @@
+{
+  "name": "audit-log",
+  "version": "1.0.0",
+  "title": "AuditLog::general.title",
+  "description": "AuditLog::general.description",
+  "author": "Asnxthaony",
+  "url": "https://github.com/Asnxthaony",
+  "license": "MIT",
+  "namespace": "AuditLog",
+  "require": {
+    "blessing-skin-server": "^5.0.0"
+  },
+  "enchants": {
+    "icon": {
+      "fa": "history",
+      "bg": "warning"
+    }
+  }
+}

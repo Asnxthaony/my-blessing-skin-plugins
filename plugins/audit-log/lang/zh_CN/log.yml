@@ -1,0 +1,17 @@
+title: 审计日志
+header:
+  action: 动作
+  detail: 详细信息
+  user-agent: 用户代理
+  created_at: 创建时间
+show-details: 点击查看
+no-records: 暂无记录
+actions:
+  login: 登录成功
+  failed-login: 登录失败
+  forgot-password: 找回密码
+  password-updated: 更改密码
+  email-updated: 更改邮箱
+  user-deleted: 删除账号
+  yggdrasil-authenticate: 登录成功 (Yggdrasil)
+  yggdrasil-failed-authenticate: 登录失败 (Yggdrasil)
