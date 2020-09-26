@@ -12,7 +12,7 @@ class AuditLogController extends Controller
         $logs = AuditLog::where('user_id', auth()->id())->orderByDesc('created_at')->paginate(10);
         $actions = trans('AuditLog::log.actions');
 
-        return view('AuditLog::log', ['logs' => $logs, 'actions' => $actions]);
+        return view('AuditLog::user.log', ['logs' => $logs, 'actions' => $actions]);
     }
 
     public function adminLogPage()
@@ -20,6 +20,6 @@ class AuditLogController extends Controller
         $logs = AuditLog::orderByDesc('created_at')->paginate(10);
         $actions = trans('AuditLog::log.actions');
 
-        return view('AuditLog::log', ['logs' => $logs, 'actions' => $actions]);
+        return view('AuditLog::admin.log', ['logs' => $logs, 'actions' => $actions]);
     }
 }

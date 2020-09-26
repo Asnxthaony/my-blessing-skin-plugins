@@ -1,0 +1,49 @@
+{% extends 'admin.base' %}
+
+{% block title %}{{ trans('AuditLog::log.title') }}{% endblock %}
+
+{% block content %}
+  <div class="card">
+    <div class="card-body p-0">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>UID</th>
+            <th>{{ trans('AuditLog::log.header.action') }}</th>
+            <th>{{ trans('AuditLog::log.header.detail') }}</th>
+            <th>IP</th>
+            <th>{{ trans('AuditLog::log.header.user-agent') }}</th>
+            <th>{{ trans('AuditLog::log.header.created_at') }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for log in logs %}
+            <tr>
+              <td>{{ log.id }}</td>
+              <td>{{ log.user_id }}</td>
+              <td>{{ actions[log.action] }}</td>
+              <td>
+                <a href="#" onclick="blessing.notify.showModal({'text': '{{ log.details }}'});">
+                  {{ trans('AuditLog::log.show-details') }}
+                </a>
+              </td>
+              <td>{{ log.ip }}</td>
+              <td>{{ log.user_agent }}</td>
+              <td>{{ log.created_at }}</td>
+            </tr>
+          {% else %}
+            <tr>
+              <td colspan="7">{{ trans('AuditLog::log.no-records') }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <div class="card-footer">
+      <div class="float-right">
+        {{ logs.links()|raw }}
+      </div>
+    </div>
+  </div>
+{% endblock %}
