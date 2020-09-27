@@ -1,0 +1,17 @@
+{
+    "name": "asnxthaony/audit-log",
+    "description": "",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Asnxthaony",
+            "email": "asnxthaony@outlook.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "require": {
+        "whichbrowser/parser": "^2.0"
+    }
+}

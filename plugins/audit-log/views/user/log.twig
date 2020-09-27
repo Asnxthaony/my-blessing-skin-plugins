@@ -29,7 +29,7 @@
                 </a>
               </td>
               <td>{{ log.ip }}</td>
-              <td>{{ log.user_agent }}</td>
+              <td title="{{ log.user_agent }}">{{ log.user_agent | browser }}</td>
               <td>{{ log.created_at }}</td>
             </tr>
           {% else %}

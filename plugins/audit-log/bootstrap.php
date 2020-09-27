@@ -8,8 +8,10 @@ use AuditLog\Listeners\OnUserLoginFailed;
 use AuditLog\Listeners\OnUserLoginSucceeded;
 use AuditLog\Listeners\Yggdrasil\OnAuthenticateFailed;
 use AuditLog\Listeners\Yggdrasil\OnAuthenticateSucceeded;
+use AuditLog\Twig\Extension\AgentExtension;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Http\Request;
+use TwigBridge\Facade\Twig;
 
 require __DIR__.'/src/Utils/helpers.php';
 
@@ -38,6 +40,8 @@ return function (Dispatcher $events, Request $request) {
      */
     $events->listen('yggdrasil.authenticate.failed', OnAuthenticateFailed::class);
     $events->listen('yggdrasil.authenticate.succeeded', OnAuthenticateSucceeded::class);
+
+    Twig::addExtension(new AgentExtension());
 
     Hook::addRoute(function () {
         Route::namespace('AuditLog\Controllers')
