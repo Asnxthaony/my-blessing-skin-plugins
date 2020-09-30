@@ -19,7 +19,7 @@
                                 <td>{{ mcbbs.forum_uid }}</td>
                             </tr>
                             <tr>
-                                <td>{{ trans('mcstaralliance::record.username') }}</td>
+                                <td>{{ trans('mcstaralliance::connect.username') }}</td>
                                 <td>{{ mcbbs.forum_username }}</td>
                             </tr>
                             <tr>
@@ -45,9 +45,9 @@
             <div class="card-footer">
                 {% if mcbbs.forum_uid %}
                     <a href="{{ url('user/connect/mcbbs') }}" class="btn bg-primary">立即同步</a>
-                    <a href="javascript:alert('Not implemented yet!')" class="btn bg-warning">{{ trans('mcstaralliance::record.unlink') }}</a>
+                    <a href="javascript:alert('Not implemented yet!')" class="btn bg-warning">{{ trans('mcstaralliance::connect.unlink') }}</a>
                 {% else %}
-                    <a href="{{ url('user/connect/mcbbs') }}" class="btn bg-primary">{{ trans('mcstaralliance::record.link') }}</a>
+                    <a href="{{ url('user/connect/mcbbs') }}" class="btn bg-primary">{{ trans('mcstaralliance::connect.link') }}</a>
                 {% endif %}
             </div>
         </div>
