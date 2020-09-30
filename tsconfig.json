@@ -2,21 +2,17 @@
   "extends": "@gplane/tsconfig",
   "compilerOptions": {
     "declaration": false,
-    "sourceMap": false,
+    "sourceMap": true,
     "target": "es2017",
     "module": "es2015",
     "baseUrl": ".",
     "paths": {
       "blessing-skin": ["./types"]
-    }
+    },
+    "types": ["svelte", "jest", "node", "@testing-library/jest-dom"]
   },
   "include": [
     "plugins/*/assets",
     "types.ts"
-  ],
-  "ts-node": {
-    "compilerOptions": {
-      "module": "commonjs"
-    }
-  }
+  ]
 }
