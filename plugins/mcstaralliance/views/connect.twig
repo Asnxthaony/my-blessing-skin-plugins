@@ -8,7 +8,7 @@
     <div class="col-lg-4">
         <div class="card card-primary">
             <div class="card-header">
-                <h3 class="card-title">我的世界中文论坛</h3>
+                <h3 class="card-title">MCBBS</h3>
             </div>
             <div class="card-body p-0">
                 <table class="table table-hover">
@@ -19,7 +19,7 @@
                                 <td>{{ mcbbs.forum_uid }}</td>
                             </tr>
                             <tr>
-                                <td>用户名</td>
+                                <td>{{ trans('mcstaralliance::record.username') }}</td>
                                 <td>{{ mcbbs.forum_username }}</td>
                             </tr>
                             <tr>
@@ -36,7 +36,7 @@
                             </tr>
                         {% else %}
                             <tr>
-                                <td colspan="2">点击按钮，立刻绑定 我的世界中文论坛 帐号</td>
+                                <td colspan="2">点击按钮，立刻绑定 MCBBS 帐号</td>
                             </tr>
                         {% endif %}
                     </tbody>
@@ -45,9 +45,9 @@
             <div class="card-footer">
                 {% if mcbbs.forum_uid %}
                     <a href="{{ url('user/connect/mcbbs') }}" class="btn bg-primary">立即同步</a>
-                    <a href="javascript:alert('此功能尚未完成！')" class="btn bg-warning">点击解绑</a>
+                    <a href="javascript:alert('Not implemented yet!')" class="btn bg-warning">{{ trans('mcstaralliance::record.unlink') }}</a>
                 {% else %}
-                    <a href="{{ url('user/connect/mcbbs') }}" class="btn bg-primary">立即绑定</a>
+                    <a href="{{ url('user/connect/mcbbs') }}" class="btn bg-primary">{{ trans('mcstaralliance::record.link') }}</a>
                 {% endif %}
             </div>
         </div>

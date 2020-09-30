@@ -53,7 +53,7 @@ return function (Dispatcher $events, Request $request, Filter $filter) {
     ]);
 
     Hook::addMenuItem('admin', 1001, [
-        'title' => '绑 - 我的世界中文论坛',
+        'title' => '账号绑定 - MCBBS',
         'icon' => 'fa-link',
         'link' => 'admin/connect/mcbbs',
     ]);
@@ -73,7 +73,7 @@ return function (Dispatcher $events, Request $request, Filter $filter) {
             ->middleware(['web', 'auth', 'role:admin'])
             ->namespace('mcstaralliance')
             ->group(function () {
-                Route::get('mcbbs', 'ConfigController@mcbbsPage');
+                Route::get('mcbbs', 'McbbsController@mcbbsPage');
             });
 
         Route::prefix('auth/login')
@@ -99,7 +99,7 @@ return function (Dispatcher $events, Request $request, Filter $filter) {
     $filter->add('oauth_providers', function (Collection $providers) {
         $providers->put('mcbbs', [
             'icon' => 'cubes fas',
-            'displayName' => '我的世界中文论坛',
+            'displayName' => 'MCBBS',
         ]);
 
         return $providers;
@@ -108,14 +108,14 @@ return function (Dispatcher $events, Request $request, Filter $filter) {
     // Misc
 
     Hook::addMenuItem('explore', 1001, [
-        'title' => '用户使用手册',
+        'title' => 'mcstaralliance::menu.manual',
         'link' => '/manual',
         'icon' => 'fa-book',
         'new-tab' => true,
     ]);
 
     Hook::addMenuItem('explore', 1002, [
-        'title' => '捐助支持',
+        'title' => 'mcstaralliance::menu.donate',
         'link' => 'https://afdian.net/@xiaoye',
         'icon' => 'fa-donate',
         'new-tab' => true,
