@@ -92,7 +92,7 @@ return function (Dispatcher $events, Request $request, Filter $filter) {
                 Route::get('mcbbs', 'ConnectController@mcbbsLogin');
             });
 
-        Route::prefix('api/x-auth')
+        Route::prefix('api/xauth')
             ->middleware(['api', 'throttle:60,1'])
             ->namespace('mcstaralliance')
             ->group(function () {
