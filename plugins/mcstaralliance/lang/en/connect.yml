@@ -1,4 +1,8 @@
 link: Link Now
 unlink: Unlink
+linked_at: Linked At
+
+sync: Sync Now
+synced_at: Synced At
 
 username: Username

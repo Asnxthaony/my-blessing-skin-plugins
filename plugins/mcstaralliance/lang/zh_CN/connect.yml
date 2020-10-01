@@ -1,4 +1,8 @@
 link: 开始绑定
 unlink: 解绑
+linked_at: 绑定时间
+
+sync: 开始同步
+synced_at: 同步时间
 
 username: 用户名

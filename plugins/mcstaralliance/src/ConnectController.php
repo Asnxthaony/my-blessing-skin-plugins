@@ -10,6 +10,7 @@ use Illuminate\Routing\Controller;
 use Laravel\Socialite\Facades\Socialite;
 use Lcobucci\JWT;
 use mcstaralliance\Models\McbbsUser;
+use mcstaralliance\Models\QQUser;
 
 require __DIR__.'/Utils/helpers.php';
 
@@ -18,6 +19,7 @@ class ConnectController extends Controller
     public function list()
     {
         $mcbbsUser = McbbsUser::where('user_id', auth()->id())->first();
+        $qqUser = QQUser::where('user_id', auth()->id())->first();
 
         if ($mcbbsUser) {
             $mcbbsUser->forum_groupname = yx_gid_to_gn($mcbbsUser->forum_groupid);
@@ -25,6 +27,7 @@ class ConnectController extends Controller
 
         return view('mcstaralliance::connect', [
             'mcbbs' => $mcbbsUser,
+            'qq' => $qqUser,
         ]);
     }
 
@@ -81,7 +84,7 @@ class ConnectController extends Controller
                     ->withClaim('gid', (int) $remoteUser->groupid)
                     ->getToken(new JWT\Signer\Hmac\Sha256(), new JWT\Signer\Key(config('jwt.secret', '')));
 
-                return redirect(route('auth.register', ['token' => $token]));
+                return redirect(route('auth.register', ['provider' => 'mcbbs', 'token' => $token]));
             }
         }
     }
@@ -115,6 +118,119 @@ class ConnectController extends Controller
             }
         } else {
             abort(403, '令牌无效，请稍后再试。');
+        }
+    }
+
+    public function qqLogin()
+    {
+        $accessToken = request()->header('Authorization');
+
+        if ($accessToken != config('services.qq.access_token')) {
+            return response()->json(['error' => '无效的 access_token'], 403);
+        }
+
+        if (!request()->has('qq')) {
+            return response()->json(['error' => '缺少 qq 参数'], 403);
+        }
+
+        $now = Carbon::now();
+        $builder = new JWT\Builder();
+        $token = (string) $builder->issuedBy('QQ-Auth')
+            ->issuedAt($now->timestamp)
+            ->expiresAt($now->addSeconds(300)->timestamp)
+            ->withClaim('qq', (int) request()->input('qq'))
+            ->getToken(new JWT\Signer\Hmac\Sha256(), new JWT\Signer\Key(config('jwt.secret', '')));
+
+        return response()->json(['token' => $token]);
+    }
+
+    public function qqCallback(Dispatcher $dispatcher)
+    {
+        if (!request()->has('token')) {
+            abort(403, '缺少 token 参数');
+        }
+
+        $user = auth()->user();
+        $remoteUser = $this->getQQUserFromToken(request()->input('token'));
+
+        if ($remoteUser) {
+            $qqUser = QQUser::where('qq_id', $remoteUser->qq_id)->first();
+
+            if ($user) {
+                if (!$qqUser) {
+                    $qqUser = new QQUser();
+                    $qqUser->user_id = $user->uid;
+                    $qqUser->qq_id = $remoteUser->qq_id;
+
+                    $qqUser->save();
+
+                    return redirect('/user/connect');
+                } else {
+                    abort(403, '此 QQ 账号已被其他用户绑定');
+                }
+            } else {
+                if ($qqUser) {
+                    $user = User::where('uid', $qqUser->user_id)->first();
+
+                    $dispatcher->dispatch('auth.login.ready', [$user]);
+                    Auth::login($user);
+                    $dispatcher->dispatch('auth.login.succeeded', [$user]);
+
+                    return redirect('/user');
+                } else {
+                    $now = Carbon::now();
+                    $builder = new JWT\Builder();
+                    $token = (string) $builder->issuedBy('QQ-Auth')
+                        ->issuedAt($now->timestamp)
+                        ->expiresAt($now->addSeconds(300)->timestamp)
+                        ->withClaim('qq', (int) $remoteUser->qq_id)
+                        ->getToken(new JWT\Signer\Hmac\Sha256(), new JWT\Signer\Key(config('jwt.secret', '')));
+
+                    return redirect(route('auth.register', ['provider' => 'qq', 'token' => $token]));
+                }
+            }
+        } else {
+            abort(403, '令牌无效，请稍后再试。');
+        }
+    }
+
+    public function qqNewBind(User $user)
+    {
+        $qqUser = $this->getQQUserFromToken(request()->input('token'));
+
+        if ($qqUser) {
+            $qqUser->user_id = $user->uid;
+
+            $qqUser->save();
+        } else {
+            abort(403, '令牌无效，请稍后再试。');
+        }
+    }
+
+    /**
+     * 从 Token 中获取 QQ 用户.
+     *
+     * @return QQUser|null
+     */
+    public function getQQUserFromToken(string $token)
+    {
+        $token = (new JWT\Parser())->parse($token);
+
+        $validationData = new JWT\ValidationData();
+        $validationData->setIssuer('QQ-Auth');
+
+        $isValid = $token->validate($validationData) && $token->verify(
+            new JWT\Signer\Hmac\Sha256(),
+            new JWT\Signer\Key(config('jwt.secret', ''))
+        );
+
+        if ($isValid) {
+            $qqUser = new QQUser();
+            $qqUser->qq_id = $token->getClaim('qq');
+
+            return $qqUser;
+        } else {
+            return null;
         }
     }
 }

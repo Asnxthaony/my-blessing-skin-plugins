@@ -1,12 +1,23 @@
 import { base_url, event, route } from 'blessing-skin'
 
-const token = new URLSearchParams(location.search).get('token')
+const searchParams = new URLSearchParams(location.search)
+
+const provider = searchParams.get('provider')
+const token = searchParams.get('token')
 
 event.on('mounted', () => {
   if (token) {
     const div = document.createElement('div')
     div.className = 'alert alert-warning'
-    div.textContent = '该 MCBBS 账号尚未关联 星域联盟 Skin 账号，请注册新账号或登录现有账号来绑定。'
+
+    switch (provider) {
+      case 'mcbbs':
+        div.textContent = '该 MCBBS 账号尚未关联 星域联盟 Skin 账号，请注册新账号或登录现有账号来绑定。'
+        break;
+      case 'qq':
+        div.textContent = '该 QQ 账号尚未关联 星域联盟 Skin 账号，请注册新账号或登录现有账号来绑定。'
+        break;
+    }
 
     setTimeout(() => {
       document.querySelector('.login-box-msg')?.after(div)

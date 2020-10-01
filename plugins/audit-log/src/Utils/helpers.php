@@ -3,7 +3,6 @@
 use AuditLog\Models\AuditLog;
 use Carbon\Carbon;
 use Vectorface\Whip\Whip;
-use Illuminate\Support\Facades\Log;
 
 if (!function_exists('audit_log')) {
     function audit_log($params)

@@ -10,7 +10,7 @@ class AgentExtension extends AbstractExtension
     public function getFilters()
     {
         return [
-            new TwigFilter('browser', [$this, 'getBrowser'])
+            new TwigFilter('browser', [$this, 'getBrowser']),
         ];
     }
 

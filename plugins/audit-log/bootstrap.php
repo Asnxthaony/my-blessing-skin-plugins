@@ -34,8 +34,7 @@ return function (Dispatcher $events, Request $request) {
     $events->listen('auth.login.failed', OnUserLoginFailed::class);
     $events->listen('auth.login.succeeded', OnUserLoginSucceeded::class);
 
-
-    /**
+    /*
      * Yggdrasil API
      */
     $events->listen('yggdrasil.authenticate.failed', OnAuthenticateFailed::class);
