@@ -165,6 +165,8 @@ class ConnectController extends Controller
                     $qqUser->save();
 
                     return redirect('/user/connect');
+                } elseif ($qqUser->user_id == $user->uid) {
+                    return redirect('/user/connect');
                 } else {
                     abort(403, '此 QQ 账号已被其他用户绑定');
                 }
