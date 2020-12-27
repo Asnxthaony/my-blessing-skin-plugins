@@ -9,17 +9,18 @@ use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Routing\Controller;
 use Laravel\Socialite\Facades\Socialite;
 use Lcobucci\JWT;
+use mcstaralliance\Models\DingtalkUser;
 use mcstaralliance\Models\McbbsUser;
 use mcstaralliance\Models\QQUser;
 
 require __DIR__.'/Utils/helpers.php';
-
 class ConnectController extends Controller
 {
     public function list()
     {
         $mcbbsUser = McbbsUser::where('user_id', auth()->id())->first();
         $qqUser = QQUser::where('user_id', auth()->id())->first();
+        $dingtalkUser = DingtalkUser::where('user_id', auth()->id())->first();
 
         if ($mcbbsUser) {
             $mcbbsUser->forum_groupname = yx_gid_to_gn($mcbbsUser->forum_groupid);
@@ -28,6 +29,7 @@ class ConnectController extends Controller
         return view('mcstaralliance::connect', [
             'mcbbs' => $mcbbsUser,
             'qq' => $qqUser,
+            'dingtalk' => $dingtalkUser,
         ]);
     }
 
@@ -38,6 +40,10 @@ class ConnectController extends Controller
 
     public function mcbbsCallback(Dispatcher $dispatcher)
     {
+        if (!request()->has('code')) {
+            abort(403, '缺少 code 参数');
+        }
+
         $user = auth()->user();
         $remoteUser = Socialite::driver('mcbbs')->user();
         $mcbbsUser = McbbsUser::where('forum_uid', $remoteUser->id)->first();
@@ -231,6 +237,114 @@ class ConnectController extends Controller
             $qqUser->qq_id = $token->getClaim('qq');
 
             return $qqUser;
+        } else {
+            return null;
+        }
+    }
+
+    public function dingtalkLogin()
+    {
+        return Socialite::driver('dingtalk')->redirect();
+    }
+
+    public function dingtalkCallback(Dispatcher $dispatcher)
+    {
+        if (!request()->has('code')) {
+            abort(403, '缺少 code 参数');
+        }
+
+        $user = auth()->user();
+        $remoteUser = Socialite::driver('dingtalk')->user();
+        $dingtalkUser = DingtalkUser::where('union_id', $remoteUser->union_id)->first();
+
+        if ($remoteUser) {
+            if ($user) {
+                if (!$dingtalkUser) {
+                    $dingtalkUser = new DingtalkUser();
+                    $dingtalkUser->user_id = $user->uid;
+                    $dingtalkUser->nickname = $remoteUser->nickname;
+                    $dingtalkUser->open_id = $remoteUser->open_id;
+                    $dingtalkUser->union_id = $remoteUser->union_id;
+
+                    $dingtalkUser->save();
+
+                    return redirect('/user/connect');
+                } elseif ($mcbbsUser->user_id == $user->uid) {
+                    $dingtalkUser->nickname = $remoteUser->nickname;
+                    $dingtalkUser->updated_at = Carbon::now();
+
+                    $dingtalkUser->save();
+
+                    return redirect('/user/connect');
+                } else {
+                    abort(403, '此钉钉账号已被其他用户绑定');
+                }
+            } else {
+                if ($dingtalkUser) {
+                    $user = User::where('uid', $dingtalkUser->user_id)->first();
+
+                    $dispatcher->dispatch('auth.login.ready', [$user]);
+                    Auth::login($user);
+                    $dispatcher->dispatch('auth.login.succeeded', [$user]);
+
+                    return redirect('/user');
+                } else {
+                    $now = Carbon::now();
+                    $builder = new JWT\Builder();
+                    $token = (string) $builder->issuedBy('Dingtalk-Auth')
+                        ->issuedAt($now->timestamp)
+                        ->expiresAt($now->addSeconds(300)->timestamp)
+                        ->withClaim('nickname', $remoteUser->nickname)
+                        ->withClaim('openid', $remoteUser->open_id)
+                        ->withClaim('unionid', $remoteUser->union_id)
+                        ->getToken(new JWT\Signer\Hmac\Sha256(), new JWT\Signer\Key(config('jwt.secret', '')));
+
+                    return redirect(route('auth.register', ['provider' => 'dingtalk', 'token' => $token]));
+                }
+            }
+        } else {
+            abort(403, '令牌无效，请稍后再试。');
+        }
+    }
+
+    public function dingtalkNewBind(User $user)
+    {
+        $dingtalkUser = $this->getDingtalkUserFromToken(request()->input('token'));
+
+        if ($dingtalkUser) {
+            $dingtalkUser->user_id = $user->uid;
+
+            $dingtalkUser->save();
+        } else {
+            abort(403, '令牌无效，请稍后再试。');
+        }
+    }
+
+    /**
+     * 从 Token 中获取 钉钉 用户.
+     *
+     * @return Dingtalkuser|null
+     */
+    public function getDingtalkUserFromToken(string $token)
+    {
+        $token = (new JWT\Parser())->parse($token);
+
+        $validationData = new JWT\ValidationData();
+        $validationData->setIssuer('Dingtalk-Auth');
+
+        $isValid = $token->validate($validationData) && $token->verify(
+            new JWT\Signer\Hmac\Sha256(),
+            new JWT\Signer\Key(config('jwt.secret', ''))
+        );
+
+        if ($isValid) {
+            $dingtalkUser = new DingtalkUser();
+            $dingtalkUser->user_id = $user->uid;
+            $dingtalkUser->nickname = $token->getClaim('nickname');
+            $dingtalkUser->open_id = $token->getClaim('openid');
+            $dingtalkUser->union_id = $token->getClaim('unionid');
+
+            return $dingtalkUser;
         } else {
             return null;
         }

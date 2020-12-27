@@ -44,7 +44,7 @@ return function (Dispatcher $events, Request $request, Filter $filter) {
     Hook::addScriptFileToPage(plugin_assets('mcstaralliance', 'js/waifu-tips.js'), ['user', 'user/*']);
 
     // Connect
-    Hook::addScriptFileToPage(plugin_assets('mcstaralliance', 'js/mcbbs.js'), ['auth/login', 'auth/register']);
+    Hook::addScriptFileToPage(plugin_assets('mcstaralliance', 'js/connect.js'), ['auth/login', 'auth/register']);
 
     Hook::addMenuItem('user', 1001, [
         'title' => '账号绑定',
@@ -64,6 +64,12 @@ return function (Dispatcher $events, Request $request, Filter $filter) {
         'link' => 'admin/connect/qq',
     ]);
 
+    Hook::addMenuItem('admin', 1003, [
+        'title' => '账号绑定 - 钉钉',
+        'icon' => 'fa-link',
+        'link' => 'admin/connect/dingtalk',
+    ]);
+
     Hook::addRoute(function () {
         Route::prefix('user/connect')
             ->middleware(['web'])
@@ -74,6 +80,9 @@ return function (Dispatcher $events, Request $request, Filter $filter) {
                 Route::get('mcbbs', 'ConnectController@mcbbsLogin');
                 Route::get('mcbbs/callback', 'ConnectController@mcbbsCallback');
 
+                Route::get('dingtalk', 'ConnectController@dingtalkLogin');
+                Route::get('dingtalk/callback', 'ConnectController@dingtalkCallback');
+
                 Route::get('qq/callback', 'ConnectController@qqCallback');
             });
 
@@ -81,8 +90,9 @@ return function (Dispatcher $events, Request $request, Filter $filter) {
             ->middleware(['web', 'auth', 'role:admin'])
             ->namespace('mcstaralliance')
             ->group(function () {
-                Route::get('mcbbs', 'McbbsController@mcbbsPage');
-                Route::get('qq', 'QQController@qqPage');
+                Route::get('mcbbs', 'LogController@mcbbsPage');
+                Route::get('qq', 'LogController@qqPage');
+                Route::get('dingtalk', 'LogController@dingtalkPage');
             });
 
         Route::prefix('auth/login')
@@ -90,6 +100,7 @@ return function (Dispatcher $events, Request $request, Filter $filter) {
             ->namespace('mcstaralliance')
             ->group(function () {
                 Route::get('mcbbs', 'ConnectController@mcbbsLogin');
+                Route::get('dingtalk', 'ConnectController@dingtalkLogin');
             });
 
         Route::prefix('api/xauth')
@@ -101,15 +112,18 @@ return function (Dispatcher $events, Request $request, Filter $filter) {
     });
 
     $events->listen('SocialiteProviders\Manager\SocialiteWasCalled', 'mcstaralliance\Providers\McbbsExtendSocialite@handle');
+    $events->listen('SocialiteProviders\Manager\SocialiteWasCalled', 'mcstaralliance\Providers\DingtalkExtendSocialite@handle');
 
     if (($request->is('auth/login') || $request->is('auth/register')) && $request->isMethod('POST') && $request->has('provider') && $request->has('token')) {
-        $events->listen('auth.login.succeeded', 'mcstaralliance\ConnectController@mcbbsNewBind');
         switch (request()->input('provider')) {
             case 'mcbbs':
                 $events->listen('auth.login.succeeded', 'mcstaralliance\ConnectController@mcbbsNewBind');
                 break;
             case 'qq':
                 $events->listen('auth.login.succeeded', 'mcstaralliance\ConnectController@qqNewBind');
+                break;
+            case 'dingtalk':
+                $events->listen('auth.login.succeeded', 'mcstaralliance\ConnectController@dingtalkNewBind');
                 break;
         }
     }
@@ -124,10 +138,21 @@ return function (Dispatcher $events, Request $request, Filter $filter) {
         'access_token' => env('QQ_ACCESS_TOKEN'),
     ]]);
 
+    config(['services.dingtalk' => [
+        'client_id' => env('DINGTALK_KEY'),
+        'client_secret' => env('DINGTALK_SECRET'),
+        'redirect' => env('DINGTALK_REDIRECT_URI'),
+    ]]);
+
     $filter->add('oauth_providers', function (Collection $providers) {
         $providers->put('mcbbs', [
             'icon' => 'cubes fas',
             'displayName' => 'MCBBS',
+        ]);
+
+        $providers->put('dingtalk', [
+            'icon' => 'bell fas',
+            'displayName' => '钉钉',
         ]);
 
         return $providers;

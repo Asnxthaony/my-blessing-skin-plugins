@@ -25,5 +25,18 @@ return [
                 // $table->foreign('user_id')->references('uid')->on('users')->onDelete('cascade');
             });
         }
+
+        if (!Schema::hasTable('connect_dingtalk')) {
+            Schema::create('connect_dingtalk', function ($table) {
+                $table->bigIncrements('id');
+                $table->unsignedBigInteger('user_id')->unique();
+                $table->string('nickname');
+                $table->string('open_id')->unique();
+                $table->string('union_id')->unique();
+                $table->timestamps();
+
+                // $table->foreign('user_id')->references('uid')->on('users')->onDelete('cascade');
+            });
+        }
     },
 ];

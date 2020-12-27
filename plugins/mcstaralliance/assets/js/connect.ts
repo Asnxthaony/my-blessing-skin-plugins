@@ -17,15 +17,18 @@ event.on('mounted', () => {
       case 'qq':
         div.textContent = '该 QQ 账号尚未关联 星域联盟 Skin 账号，请注册新账号或登录现有账号来绑定。'
         break;
+      case 'dingtalk':
+        div.textContent = '该钉钉账号尚未关联 星域联盟 Skin 账号，请注册新账号或登录现有账号来绑定。'
+        break;
     }
 
     setTimeout(() => {
       document.querySelector('.login-box-msg')?.after(div)
 
       if (route === 'auth/register') {
-        document.querySelector('.d-flex:last-child > a')?.setAttribute('href', `${base_url}/auth/login?token=${token}`)
+        document.querySelector('.d-flex:last-child > a')?.setAttribute('href', `${base_url}/auth/login?provider=${provider}&token=${token}`)
       } else if (route === 'auth/login') {
-        document.querySelector('.mt-3 > a')?.setAttribute('href', `${base_url}/auth/register?token=${token}`)
+        document.querySelector('.mt-3 > a')?.setAttribute('href', `${base_url}/auth/register?provider=${provider}&token=${token}`)
       }
     }, 0)
   }
