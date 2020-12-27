@@ -16,20 +16,20 @@ class LogController extends Controller
         $records = McbbsUser::paginate(10);
         $group_names = yx_get_group_names();
 
-        return view('mcstaralliance::mcbbs', ['records' => $records, 'group_names' => $group_names]);
+        return view('mcstaralliance::log_mcbbs', ['records' => $records, 'group_names' => $group_names]);
     }
 
     public function qqPage()
     {
         $records = QQUser::paginate(10);
 
-        return view('mcstaralliance::qq', ['records' => $records]);
+        return view('mcstaralliance::log_qq', ['records' => $records]);
     }
 
     public function dingtalkPage()
     {
         $records = DingtalkUser::paginate(10);
 
-        return view('mcstaralliance::dingtalk', ['records' => $records]);
+        return view('mcstaralliance::log_dingtalk', ['records' => $records]);
     }
 }

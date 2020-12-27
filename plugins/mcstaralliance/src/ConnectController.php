@@ -269,7 +269,7 @@ class ConnectController extends Controller
                     $dingtalkUser->save();
 
                     return redirect('/user/connect');
-                } elseif ($mcbbsUser->user_id == $user->uid) {
+                } elseif ($dingtalkUser->user_id == $user->uid) {
                     $dingtalkUser->nickname = $remoteUser->nickname;
                     $dingtalkUser->updated_at = Carbon::now();
 
