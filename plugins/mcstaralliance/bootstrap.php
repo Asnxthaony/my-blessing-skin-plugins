@@ -2,6 +2,7 @@
 
 use App\Events\RenderingHeader;
 use App\Services\Hook;
+use App\Services\Plugin;
 use Blessing\Filter;
 use Blessing\Rejection;
 use Carbon\Carbon;
@@ -9,15 +10,16 @@ use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 
-return function (Dispatcher $events, Request $request, Filter $filter) {
+return function (Dispatcher $events, Request $request, Filter $filter, Plugin $plugin) {
+    config(['app.asset_url' => option('cdn_address')]);
+
     $events->listen(Illuminate\Auth\Events\Authenticated::class, function ($payload) use ($filter) {
         $filter->add('user_can_edit_profile', function ($can, $action) {
-            switch ($action) {
-                case 'delete':
-                    return new Rejection('请使用 Telegram 联系 @Asnxthaony 申请删除您的账号。');
-                default:
-                    break;
+            if ($action === 'delete') {
+                return new Rejection('请联系 hello@mcstaralliance.com 申请删除你的帐号。');
             }
+
+            return $can;
         });
 
         $filter->add('grid:user.profile', function ($grid) {
@@ -41,33 +43,21 @@ return function (Dispatcher $events, Request $request, Filter $filter) {
     });
 
     // Live2D
-    Hook::addScriptFileToPage(plugin_assets('mcstaralliance', 'js/waifu-tips.js'), ['user', 'user/*']);
+    // Hook::addScriptFileToPage($plugin->assets('js/waifu-tips.js'), ['user', 'user/*']);
 
     // Connect
-    Hook::addScriptFileToPage(plugin_assets('mcstaralliance', 'js/connect.js'), ['auth/login', 'auth/register']);
+    Hook::addScriptFileToPage($plugin->assets('js/connect.js'), ['auth/login', 'auth/register']);
 
     Hook::addMenuItem('user', 1001, [
-        'title' => '账号绑定',
+        'title' => '帐号绑定',
         'icon' => 'fa-link',
         'link' => 'user/connect',
     ]);
 
     Hook::addMenuItem('admin', 1001, [
-        'title' => '账号绑定 - MCBBS',
+        'title' => '帐号绑定 - MCBBS',
         'icon' => 'fa-link',
         'link' => 'admin/connect/mcbbs',
-    ]);
-
-    Hook::addMenuItem('admin', 1002, [
-        'title' => '账号绑定 - QQ',
-        'icon' => 'fa-link',
-        'link' => 'admin/connect/qq',
-    ]);
-
-    Hook::addMenuItem('admin', 1003, [
-        'title' => '账号绑定 - 钉钉',
-        'icon' => 'fa-link',
-        'link' => 'admin/connect/dingtalk',
     ]);
 
     Hook::addRoute(function () {
@@ -79,11 +69,6 @@ return function (Dispatcher $events, Request $request, Filter $filter) {
 
                 Route::get('mcbbs', 'ConnectController@mcbbsLogin');
                 Route::get('mcbbs/callback', 'ConnectController@mcbbsCallback');
-
-                Route::get('dingtalk', 'ConnectController@dingtalkLogin');
-                Route::get('dingtalk/callback', 'ConnectController@dingtalkCallback');
-
-                Route::get('qq/callback', 'ConnectController@qqCallback');
             });
 
         Route::prefix('admin/connect')
@@ -91,8 +76,6 @@ return function (Dispatcher $events, Request $request, Filter $filter) {
             ->namespace('mcstaralliance')
             ->group(function () {
                 Route::get('mcbbs', 'LogController@mcbbsPage');
-                Route::get('qq', 'LogController@qqPage');
-                Route::get('dingtalk', 'LogController@dingtalkPage');
             });
 
         Route::prefix('auth/login')
@@ -100,30 +83,15 @@ return function (Dispatcher $events, Request $request, Filter $filter) {
             ->namespace('mcstaralliance')
             ->group(function () {
                 Route::get('mcbbs', 'ConnectController@mcbbsLogin');
-                Route::get('dingtalk', 'ConnectController@dingtalkLogin');
-            });
-
-        Route::prefix('api/xauth')
-            ->middleware(['api', 'throttle:60,1'])
-            ->namespace('mcstaralliance')
-            ->group(function () {
-                Route::post('qq', 'ConnectController@qqLogin');
             });
     });
 
     $events->listen('SocialiteProviders\Manager\SocialiteWasCalled', 'mcstaralliance\Providers\McbbsExtendSocialite@handle');
-    $events->listen('SocialiteProviders\Manager\SocialiteWasCalled', 'mcstaralliance\Providers\DingtalkExtendSocialite@handle');
 
     if (($request->is('auth/login') || $request->is('auth/register')) && $request->isMethod('POST') && $request->has('provider') && $request->has('token')) {
         switch (request()->input('provider')) {
             case 'mcbbs':
                 $events->listen('auth.login.succeeded', 'mcstaralliance\ConnectController@mcbbsNewBind');
-                break;
-            case 'qq':
-                $events->listen('auth.login.succeeded', 'mcstaralliance\ConnectController@qqNewBind');
-                break;
-            case 'dingtalk':
-                $events->listen('auth.login.succeeded', 'mcstaralliance\ConnectController@dingtalkNewBind');
                 break;
         }
     }
@@ -134,25 +102,10 @@ return function (Dispatcher $events, Request $request, Filter $filter) {
         'redirect' => env('MCBBS_REDIRECT_URI'),
     ]]);
 
-    config(['services.qq' => [
-        'access_token' => env('QQ_ACCESS_TOKEN'),
-    ]]);
-
-    config(['services.dingtalk' => [
-        'client_id' => env('DINGTALK_KEY'),
-        'client_secret' => env('DINGTALK_SECRET'),
-        'redirect' => env('DINGTALK_REDIRECT_URI'),
-    ]]);
-
     $filter->add('oauth_providers', function (Collection $providers) {
         $providers->put('mcbbs', [
             'icon' => 'cubes fas',
             'displayName' => 'MCBBS',
-        ]);
-
-        $providers->put('dingtalk', [
-            'icon' => 'bell fas',
-            'displayName' => '钉钉',
         ]);
 
         return $providers;

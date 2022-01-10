@@ -1,19 +1,14 @@
 <?php
 
-$finder = PhpCsFixer\Finder::create()
-    ->in(__DIR__.'/plugins')
-;
+$finder = PhpCsFixer\Finder::create()->in('plugins');
 
-return PhpCsFixer\Config::create()
-    ->setRules([
+$config = new PhpCsFixer\Config();
+return $config->setRules([
         '@Symfony' => true,
         'align_multiline_comment' => true,
         'array_syntax' => ['syntax' => 'short'],
         'increment_style' => ['style' => 'post'],
         'list_syntax' => ['syntax' => 'short'],
-        'standardize_increment' => false,
         'yoda_style' => false,
-
     ])
-    ->setFinder($finder)
-;
+    ->setFinder($finder);

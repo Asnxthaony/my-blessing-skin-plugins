@@ -1,0 +1,46 @@
+{% extends 'user.base' %}
+
+{% block title %}星登录{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-4">
+        <div class="card card-primary">
+            <div class="card-header">
+                <h3 class="card-title">微信</h3>
+            </div>
+            <div class="card-body p-0">
+                <table class="table table-hover">
+                    <tbody>
+                        {% if wechat %}
+                            <tr>
+                                <td>Open ID</td>
+                                <td>{{ wechat.open_id }}</td>
+                            </tr>
+                            <tr>
+                                <td>绑定时间</td>
+                                <td>{{ wechat.created_at }}</td>
+                            </tr>
+                            <tr>
+                                <td>同步时间 </td>
+                                <td>{{ wechat.updated_at }}</td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="2">点击按钮，立刻绑定 微信 帐号</td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="card-footer">
+                {% if wechat %}
+                    <a href="javascript:alert('Not implemented yet!')" class="btn bg-warning">{{ trans('mcstaralliance::connect.unlink') }}</a>
+                {% else %}
+                    <a href="javascript:wechat_bind()" class="btn bg-primary">{{ trans('mcstaralliance::connect.link') }}</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

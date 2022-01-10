@@ -37,7 +37,7 @@
     <div class="card-footer">
         {% if mcbbs %}
             <a href="{{ url('user/connect/mcbbs') }}" class="btn bg-primary">{{ trans('mcstaralliance::connect.sync') }}</a>
-            <a href="javascript:alert('Not implemented yet!')" class="btn bg-warning">{{ trans('mcstaralliance::connect.unlink') }}</a>
+            <a href="javascript:alert('请联系管理员解绑')" class="btn bg-warning">{{ trans('mcstaralliance::connect.unlink') }}</a>
         {% else %}
             <a href="{{ url('user/connect/mcbbs') }}" class="btn bg-primary">{{ trans('mcstaralliance::connect.link') }}</a>
         {% endif %}

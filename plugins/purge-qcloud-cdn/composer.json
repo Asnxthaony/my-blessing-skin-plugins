@@ -1,0 +1,5 @@
+{
+    "require": {
+        "tencentcloud/cdn": "^3.0"
+    }
+}

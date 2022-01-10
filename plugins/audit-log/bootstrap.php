@@ -28,7 +28,7 @@ return function (Dispatcher $events, Request $request) {
         'link' => 'admin/audit-log',
     ]);
 
-    $events->listen('auth.forgot.failed', OnForgotSent::class);
+    $events->listen('auth.forgot.sent', OnForgotSent::class);
     $events->listen('user.profile.updated', OnProfileUpdated::class);
     $events->listen('user.deleted', OnUserDeleted::class);
     $events->listen('auth.login.failed', OnUserLoginFailed::class);

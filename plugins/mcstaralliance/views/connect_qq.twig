@@ -16,7 +16,7 @@
                     </tr>
                 {% else %}
                     <tr>
-                        <td colspan="2">点击按钮，立刻绑定 QQ 帐号</td>
+                        <td colspan="2">请按照「<a href="https://www.mcstaralliance.com/archives/how-to-link-your-xingyu-account-to-a-qq-account.html">绑定操作指南</a>」，绑定 QQ 帐号。</td>
                     </tr>
                 {% endif %}
             </tbody>
@@ -24,9 +24,7 @@
     </div>
     <div class="card-footer">
         {% if qq %}
-            <a href="javascript:alert('Not implemented yet!')" class="btn bg-warning">{{ trans('mcstaralliance::connect.unlink') }}</a>
-        {% else %}
-            <a href="javascript:alert('Not implemented yet!')" class="btn bg-primary">{{ trans('mcstaralliance::connect.link') }}</a>
+            <a href="javascript:alert('请联系管理员解绑')" class="btn bg-warning">{{ trans('mcstaralliance::connect.unlink') }}</a>
         {% endif %}
     </div>
 </div>

@@ -12,13 +12,10 @@ event.on('mounted', () => {
 
     switch (provider) {
       case 'mcbbs':
-        div.textContent = '该 MCBBS 帐号尚未关联 星域联盟 Skin 帐号，请注册新帐号或登录现有帐号来绑定。'
-        break;
-      case 'qq':
-        div.textContent = '该 QQ 帐号尚未关联 星域联盟 Skin 帐号，请注册新帐号或登录现有帐号来绑定。'
+        div.textContent = '该 MCBBS 帐号尚未关联星域帐号，请注册新帐号或登录现有帐号来绑定。'
         break;
       case 'dingtalk':
-        div.textContent = '该钉钉帐号尚未关联 星域联盟 Skin 帐号，请注册新帐号或登录现有帐号来绑定。'
+        div.textContent = '该钉钉帐号尚未关联星域帐号，请注册新帐号或登录现有帐号来绑定。'
         break;
     }
 

@@ -1,0 +1,55 @@
+{% extends 'admin.base' %}
+
+{% block title %}实名认证{% endblock %}
+
+{% block content %}
+  <div class="card">
+    <div class="card-body p-0">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>UID</th>
+            <th>真实姓名</th>
+            <th>身份证号</th>
+            <th>状态</th>
+            <th>创建时间</th>
+            <th>更新时间</th>
+            <th>更多操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for record in records %}
+            <tr>
+              <td>{{ record.id }}</td>
+              <td>{{ record.user_id }}</td>
+              <td>{{ record.realname | decrypt }}</td>
+              <td>{{ record.id_card | decrypt }}</td>
+              <td>{{ states[record.state] }}</td>
+              <td>{{ record.created_at }}</td>
+              <td>{{ record.updated_at }}</td>
+              <td>
+                {% if record.state == 0 %}
+                  <a href="#" onclick="smrz_accept({{ record.id }})" class="btn btn-success mr-2">通过</a>
+                  <a href="#" onclick="smrz_reject({{ record.id }})" class="btn btn-danger">拒绝</a>
+                {% else %}
+                  <a href="#" class="btn btn-success mr-2 disabled">通过</a>
+                  <a href="#" class="btn btn-danger disabled">拒绝</a>
+                {% endif %}
+              </td>
+            </tr>
+          {% else %}
+            <tr>
+              <td colspan="8">暂无记录</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <div class="card-footer">
+      <div class="float-right">
+        {{ records.links()|raw }}
+      </div>
+    </div>
+  </div>
+{% endblock %}
