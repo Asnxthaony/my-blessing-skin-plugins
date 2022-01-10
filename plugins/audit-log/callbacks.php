@@ -12,8 +12,6 @@ return [
                 $table->string('user_agent');
                 $table->dateTime('created_at');
 
-                // $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-
                 $table->index('action', 'idx_action');
                 $table->index('ip', 'idx_ip');
             });

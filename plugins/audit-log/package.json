@@ -1,6 +1,6 @@
 {
   "name": "audit-log",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "title": "AuditLog::general.title",
   "description": "AuditLog::general.description",
   "author": "Asnxthaony",
@@ -8,7 +8,7 @@
   "license": "MIT",
   "namespace": "AuditLog",
   "require": {
-    "blessing-skin-server": "^5.0.0"
+    "blessing-skin-server": "^5|^6"
   },
   "enchants": {
     "icon": {

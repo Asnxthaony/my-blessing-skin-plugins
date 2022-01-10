@@ -8,6 +8,8 @@ use AuditLog\Listeners\OnUserLoginFailed;
 use AuditLog\Listeners\OnUserLoginSucceeded;
 use AuditLog\Listeners\Yggdrasil\OnAuthenticateFailed;
 use AuditLog\Listeners\Yggdrasil\OnAuthenticateSucceeded;
+use AuditLog\Listeners\Yggdrasil\OnHasJoinedServer;
+use AuditLog\Listeners\Yggdrasil\OnJoinServer;
 use AuditLog\Twig\Extension\AgentExtension;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Http\Request;
@@ -39,6 +41,8 @@ return function (Dispatcher $events, Request $request) {
      */
     $events->listen('yggdrasil.authenticate.failed', OnAuthenticateFailed::class);
     $events->listen('yggdrasil.authenticate.succeeded', OnAuthenticateSucceeded::class);
+    $events->listen('yggdrasil.session.joinserver', OnJoinServer::class);
+    $events->listen('yggdrasil.session.hasjoinedserver', OnHasJoinedServer::class);
 
     Twig::addExtension(new AgentExtension());
 

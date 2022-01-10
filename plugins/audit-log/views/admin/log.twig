@@ -28,7 +28,7 @@
                   {{ trans('AuditLog::log.show-details') }}
                 </a>
               </td>
-              <td>{{ log.ip }}</td>
+              <td>{{ log.ip | location }} ({{ log.ip }})</td>
               <td title="{{ log.user_agent }}">{{ log.user_agent | browser }}</td>
               <td>{{ log.created_at }}</td>
             </tr>

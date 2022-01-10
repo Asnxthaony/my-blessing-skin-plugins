@@ -15,3 +15,5 @@ actions:
   user-deleted: User deleted
   yggdrasil-authenticate: Logged in (Yggdrasil)
   yggdrasil-failed-authenticate: Failed to login (Yggdrasil)
+  yggdrasil-join-server: Attempt to Join Server (Yggdrasil)
+  yggdrasil-has-joined-server: Join Server (Yggdrasil)

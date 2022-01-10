@@ -15,3 +15,5 @@ actions:
   user-deleted: 删除帐号
   yggdrasil-authenticate: 登录成功 (Yggdrasil)
   yggdrasil-failed-authenticate: 登录失败 (Yggdrasil)
+  yggdrasil-join-server: 请求加入服务器 (Yggdrasil)
+  yggdrasil-has-joined-server: 	进入服务器 (Yggdrasil)
