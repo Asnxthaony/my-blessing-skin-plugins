@@ -27,7 +27,7 @@ class RealUserController extends Controller
             })->renderWithoutSubmitButton();
         } else {
             $form = Option::form('smrz', '实名认证', function ($form) use ($realUser) {
-                if ($realUser->state == RealUser::REJECTED) {
+                if ($realUser && $realUser->state == RealUser::REJECTED) {
                     $form->addMessage("审核不通过，理由：{$realUser->reason}", 'danger');
                 }
 
