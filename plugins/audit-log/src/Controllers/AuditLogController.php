@@ -3,6 +3,7 @@
 namespace AuditLog\Controllers;
 
 use AuditLog\Models\AuditLog;
+use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 
 class AuditLogController extends Controller
@@ -17,9 +18,15 @@ class AuditLogController extends Controller
 
     public function adminLogPage()
     {
-        $logs = AuditLog::orderByDesc('created_at')->paginate(10);
-        $actions = trans('AuditLog::log.actions');
+        return view('AuditLog::admin.log');
+    }
 
-        return view('AuditLog::admin.log', ['logs' => $logs, 'actions' => $actions]);
+    public function adminLogList(Request $request)
+    {
+        $q = $request->input('q');
+
+        $logs = AuditLog::usingSearchString($q)->orderByDesc('created_at')->paginate(10);
+
+        return $logs;
     }
 }

@@ -1,18 +1,16 @@
 {
-    "name": "asnxthaony/audit-log",
-    "description": "",
-    "type": "project",
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "Asnxthaony",
-            "email": "asnxthaony@outlook.com"
-        }
-    ],
-    "minimum-stability": "dev",
-    "prefer-stable": true,
-    "require": {
-        "whichbrowser/parser": "^2.0",
-        "geoip2/geoip2": "2.0"
+  "name": "asnxthaony/audit-log",
+  "description": "",
+  "type": "project",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Asnxthaony",
+      "email": "asnxthaony@outlook.com"
     }
+  ],
+  "require": {
+    "whichbrowser/parser": "^2.0",
+    "ipip/db": "1.0.0"
+  }
 }

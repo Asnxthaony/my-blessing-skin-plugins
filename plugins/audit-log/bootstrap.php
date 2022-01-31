@@ -46,12 +46,15 @@ return function (Dispatcher $events, Request $request) {
 
     Twig::addExtension(new AgentExtension());
 
+    Hook::addScriptFileToPage(plugin('audit-log')->assets('AuditLog.js'), ['admin/audit-log']);
+
     Hook::addRoute(function () {
         Route::namespace('AuditLog\Controllers')
             ->middleware(['web', 'auth'])
             ->group(function () {
                 Route::get('user/audit-log', 'AuditLogController@logPage');
                 Route::get('admin/audit-log', 'AuditLogController@adminLogPage')->middleware('role:super-admin');
+                Route::get('admin/audit-log/list', 'AuditLogController@adminLogList')->middleware('role:super-admin');
             });
     });
 };
