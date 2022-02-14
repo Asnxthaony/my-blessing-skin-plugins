@@ -1,6 +1,6 @@
 {
   "name": "purge-qcloud-cdn",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "title": "刷新腾讯云 CDN",
   "description": "当资源被更新时，自动刷新腾讯云 CDN 的缓存。",
   "author": "Asnxthaony",

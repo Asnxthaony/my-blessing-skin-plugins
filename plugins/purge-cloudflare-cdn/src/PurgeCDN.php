@@ -54,12 +54,14 @@ class PurgeCDN implements ShouldQueue
         }
         if (isset($yggdrasil) && $yggdrasil->isEnabled()) {
             $uuid = DB::table('uuid')->where('name', $name)->value('uuid');
-            array_push(
-                $urls,
-                '/api/yggdrasil/sessionserver/session/minecraft/profile/'.$uuid,
-                '/api/yggdrasil/sessionserver/session/minecraft/profile/'.$uuid.'?unsigned=false',
-                '/api/yggdrasil/sessionserver/session/minecraft/profile/'.$uuid.'?unsigned=true'
-            );
+            if ($uuid) {
+                array_push(
+                    $urls,
+                    '/api/yggdrasil/sessionserver/session/minecraft/profile/'.$uuid,
+                    '/api/yggdrasil/sessionserver/session/minecraft/profile/'.$uuid.'?unsigned=false',
+                    '/api/yggdrasil/sessionserver/session/minecraft/profile/'.$uuid.'?unsigned=true'
+                );
+            }
         }
 
         $siteUrl = env('CLOUDFLARE_SITE_URL');
