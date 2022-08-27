@@ -40,13 +40,15 @@ if (!function_exists('getLocation')) {
             return '运营中心';
         }
 
+        if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
+            $city = new \ipip\db\City('/usr/local/share/GeoIP/v4.ipdb');
+        } else {
+            $city = new \ipip\db\City('/usr/local/share/GeoIP/v6.ipdb');
+        }
+
         try {
-            // $city = new \ipip\db\City('I:/work/ipipfree.ipdb');
-            $city = new \ipip\db\City('/usr/local/share/GeoIP/ipipfree.ipdb');
-
-            $location = $city->find($ip, 'CN');
-
-            return implode($location);
+            $location = $city->findMap($ip, 'CN');
+            return $location['country_name'] . $location['region_name'] . $location['city_name'];
         } catch (\InvalidArgumentException $ex) {
             // return $ex->getMessage();
         }
