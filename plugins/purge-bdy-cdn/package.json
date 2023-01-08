@@ -1,0 +1,17 @@
+{
+  "name": "purge-bdy-cdn",
+  "version": "0.1.0",
+  "title": "刷新百度云 CDN",
+  "description": "",
+  "author": "Asnxthaony",
+  "namespace": "Asnxthaony\\PurgeBdyCdn",
+  "require": {
+    "blessing-skin-server": "^5|^6"
+  },
+  "enchants": {
+    "icon": {
+      "fa": "truck-moving",
+      "bg": "blue"
+    }
+  }
+}
