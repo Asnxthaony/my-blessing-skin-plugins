@@ -1,0 +1,17 @@
+{
+  "name": "texture-mng",
+  "version": "1.0.0",
+  "title": "材质管理",
+  "description": "",
+  "author": "Asnxthaony",
+  "namespace": "TextureMng",
+  "require": {
+    "blessing-skin-server": "^5|^6"
+  },
+  "enchants": {
+    "icon": {
+      "fa": "wrench",
+      "bg": "red"
+    }
+  }
+}
