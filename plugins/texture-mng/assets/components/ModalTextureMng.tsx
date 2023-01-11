@@ -64,7 +64,7 @@ const ModalTextureMng: React.FC<Props> = (props) => {
           <option value="涉及违禁信息">涉及违禁信息</option>
           <option value="涉及不适宜内容">涉及不适宜内容</option>
           <option value="涉及人身攻击信息">涉及人身攻击信息</option>
-          <option value="涉嫌时政内容">涉嫌时政内容</option>
+          <option value="版权方要求">版权方要求</option>
         </select>
       </div>
     </Modal>

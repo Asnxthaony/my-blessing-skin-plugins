@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import * as ReactDOM from 'react-dom'
-import ModalTextureMng from './ModalTextureMng'
+import ModalTextureMng from './components/ModalTextureMng'
 
 const TextureMngPanel: React.FC = () => {
   const [showModal, setShowModal] = useState(false)
